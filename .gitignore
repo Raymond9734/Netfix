@@ -1,2 +1,21 @@
 # Ignore the virtual environment directory
 my_env-Netfix/
+
+# Compiled Python files
+*.pyc
+*.pyo
+__pycache__/
+
+
+# Environment-specific configuration files
+.env
+.venv
+
+# IDE and editor configuration
+.vscode/
+.idea/
+
+# Temporary files
+*.log
+*.tmp
+
