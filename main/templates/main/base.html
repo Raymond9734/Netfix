@@ -1,22 +1,20 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/style.css' %}"
-    />
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Title{% endblock %}</title>
-  </head>
-  <body>
-    {% include 'main/navbar.html' %}
-    <!-- places the content of navbar.html here -->
-    <div class='content'>
-      {% block content %} replace me {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Home Service Hub{% endblock %}</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body class="min-h-screen">
+    {% include 'partials/header.html' %}
+    <div id="app" class="min-h-screen bg-overlay">
+        {% block content %}{% endblock %}
     </div>
-  </body>
+    {% include 'partials/footer.html' %}
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
 </html>
