@@ -13,16 +13,25 @@ class User(AbstractUser):
 
 
 class Customer(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User, on_delete=models.CASCADE
-    )  # Use ForeignKey for relational integrity
-    birth = models.DateField()  # Example field
+    )  # Use OneToOneField for a one-to-one relationship
+    date_of_birth = models.DateField()
+
+    def __str__(self):
+        return self.user.username
 
 
 # Company model
 class Company(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    email = models.EmailField(max_length=100, unique=True, blank=False, null=False,default='default@example.com')
+    email = models.EmailField(
+        max_length=100,
+        unique=True,
+        blank=False,
+        null=False,
+        default="default@example.com",
+    )
     username = models.CharField(max_length=150, unique=True, blank=False, null=False)
     field_of_work = models.CharField(
         max_length=70,
