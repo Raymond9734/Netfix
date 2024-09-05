@@ -10,9 +10,9 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ("user", "field")
+    list_display = ("user", "field_of_work", "rating")
 
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ("user", "birth")
+    list_display = ("user", "date_of_birth")

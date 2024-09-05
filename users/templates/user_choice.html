@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="full-height">
+    <div class="container1">
+        <h2 class="title">Register as</h2>
+            <div class="card-main">
+                <!-- Company Registration -->
+                <a href="{% url 'register_company' %}" class="button">
+                    <!-- <img src="{% static 'images/company.jpg' %}" alt="Company Icon"> -->
+                    <span>Register as a Company</span>
+                </a>
+    
+                <!-- Customer Registration -->
+                <a href="{% url 'register_customer' %}" class="button">
+                    <!-- <img src="{% static 'images/customer.jpg' %}" alt="Customer Icon"> -->
+                    <span>Register as a Customer</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    
