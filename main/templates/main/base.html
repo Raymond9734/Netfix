@@ -8,6 +8,7 @@
     <title>{% block title %}Home Service Hub{% endblock %}</title>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main_app.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
@@ -18,5 +19,8 @@
     </div>
     {% include 'partials/home_footer.html' %}
     <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="{% static 'js/company-profile.js' %}"></script>
+    <script src="{% static 'js/main_app.js' %}"></script>
+    <script src="{% static 'js/registration.js' %}"></script>
 </body>
 </html>
