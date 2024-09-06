@@ -5,6 +5,8 @@ from django.contrib.auth.views import LoginView
 from .forms import UserLoginForm
 from . import views as v
 
+app_name = "users"
+
 urlpatterns = [
     path("", v.register, name="register"),
     path("company_registration/", v.register_company, name="register_company"),
