@@ -55,6 +55,7 @@ class Company(models.Model):
     rating = models.IntegerField(
         validators=[MaxValueValidator(5), MinValueValidator(0)], default=0
     )
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.id} - {self.user.username}"
