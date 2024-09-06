@@ -8,19 +8,19 @@
         <h2 class="title">Register as</h2>
             <div class="card-main">
                 <!-- Company Registration -->
-                <a href="{% url 'register_company' %}" class="button">
+                <a href="{% url 'users:register_company' %}" class="button">
                     <!-- <img src="{% static 'images/company.jpg' %}" alt="Company Icon"> -->
                     <span>Register as a Company</span>
                 </a>
     
                 <!-- Customer Registration -->
-                <a href="{% url 'register_customer' %}" class="button">
+                <a href="{% url 'users:register_customer' %}" class="button">
                     <!-- <img src="{% static 'images/customer.jpg' %}" alt="Customer Icon"> -->
                     <span>Register as a Customer</span>
                 </a>
 
                 <!-- login option -->
-                <a href="{% url 'login' %}" class="button">
+                <a href="{% url 'users:login' %}" class="button">
                     <!-- <img src="{% static 'images/customer.jpg' %}" alt="Customer Icon"> -->
                     <span>LOGIN</span>
                 </a>
