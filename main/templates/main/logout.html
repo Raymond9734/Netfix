@@ -1,9 +1,15 @@
-{% extends 'main/base.html' %} 
-    {% block title %}
-        Bye bye
-    {% endblock %}
+{% extends 'main/base.html' %}
+
+{% block title %}
+    Bye bye
+{% endblock %}
 
 {% block content %}
-    <p style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 80px;">Bye! Hope to see you soon.</p>
-    <a href="/" style="display: block; text-align: center; margin-top: 60px;">Return to home page</a>
+    <div class="wrapper">
+        <div id="logout-message" class="logout-container">
+            <p class="logout-text">Bye! Hope to see you soon.</p>
+            <a href="{% url 'users:choose_registration' %}" class="logout-home-link">Return to home page</a>
+        </div>
+    </div>
 {% endblock %}
+
