@@ -22,19 +22,41 @@ def register_company(request):
     if request.method == "POST":
         form = CompanyRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
+            # Extract cleaned data from the form
+            email = form.cleaned_data["email"]
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+            field_of_work = form.cleaned_data["field_of_work"]
+            description = form.cleaned_data.get(
+                "description", ""
+            )  # Use default empty string if description is not provided
+
+            # Create user
+            user = User.objects.create_user(
+                username=username, email=email, password=password
+            )
             user.is_company = True
-            user.set_password(form.cleaned_data["password"])
             user.save()
+
+            # Create Company instance
             Company.objects.create(
                 user=user,
-                username=user.username,  # Or some other field value
-                email=user.email,
-                field_of_work=form.cleaned_data["field_of_work"],
+                username=username,  # This assumes 'username' is a valid field in Company, adjust if needed
+                email=email,
+                field_of_work=field_of_work,
+                description=description,
             )
-            login(request, user)  # Automatically log in the user after registration
+
+            # Log in the user
+            login(request, user)
+
+            # Success message and redirect
             messages.success(request, "Registration successful.")
-            return redirect("main:home")
+            return redirect(reverse("company_profile", kwargs={"name": username}))
+
+        else:
+            # Handle form errors
+            messages.error(request, "Please correct the errors below.")
     else:
         form = CompanyRegistrationForm()
 

@@ -1,0 +1,48 @@
+/* Custom CSS for the logout page */
+/* body, html {
+    height: 100%;
+    margin: 0;
+} */
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height to center vertically */
+}
+
+.logout-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; /* Slightly less than full height */
+    width: 600px; /* Fixed width */
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+
+.logout-text {
+    font-family: 'Georgia', 'Times New Roman', Times, serif;
+    font-size: 50px;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+.logout-home-link {
+    text-decoration: none;
+    font-size: 20px;
+    color: #fff;
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.logout-home-link:hover {
+    background-color: #388E3C;
+}

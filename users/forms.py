@@ -42,8 +42,10 @@ class UserLoginForm(forms.Form):
 
 # Form for handling user registration and validation
 class CompanyRegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-    password_confirmation = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
+    password_confirmation = forms.CharField(
+        widget=forms.PasswordInput, label="Confirm Password"
+    )
     field_of_work = forms.ChoiceField(
         choices=[
             ("Air Conditioner", "Air Conditioner"),
@@ -58,16 +60,24 @@ class CompanyRegistrationForm(forms.ModelForm):
             ("Painting", "Painting"),
             ("Plumbing", "Plumbing"),
             ("Water Heaters", "Water Heaters"),
-        ]
+        ],
+        label="Field of Work",
     )
 
     class Meta:
-        model = User
-        fields = ["username", "email", "password", "field_of_work"]
+        model = Company
+        fields = [
+            "email",
+            "username",
+            "field_of_work",
+            "description",
+        ]  # Adjusted to Company model fields
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
-        if User.objects.filter(email=email).exists():
+        if Company.objects.filter(
+            email=email
+        ).exists():  # Ensure you're checking the right model
             raise forms.ValidationError("This email is already registered.")
         return email
 
@@ -77,7 +87,7 @@ class CompanyRegistrationForm(forms.ModelForm):
         password_confirmation = cleaned_data.get("password_confirmation")
 
         if password and password_confirmation and password != password_confirmation:
-            raise ValidationError("Passwords do not match.")
+            raise forms.ValidationError("Passwords do not match.")
 
         return cleaned_data
 
