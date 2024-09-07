@@ -11,5 +11,8 @@
             <a href="{% url 'users:choose_registration' %}" class="logout-home-link">Return to home page</a>
         </div>
     </div>
+    {% block extra_js %}
+    <script src="{% static 'js/main_app.js' %}"></script>
+    {% endblock %}
 {% endblock %}
 
