@@ -1,0 +1,36 @@
+
+{% load static %}
+   <!-- services.html -->
+<section class="services">
+    <div class="container">
+        <h2>Our Services</h2>
+        <div class="service-cards">
+            {% for service in services %}
+            <div class="service-card">
+                <img src="{% static 'images/company.jpg' %}" alt="{{ service.name }}">
+                <div class="service-card-content">
+                    <h3>{{ service.name }}hey</h3>
+                    <p>{{ service.description }}</p>
+                    <a href="#">Request Service</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- most_requested.html -->
+<section class="most-requested">
+    <div class="container">
+        <h2>Most Requested Services</h2>
+        <div class="most-requested-services">
+            {% for service in most_requested_services %}
+            <div class="most-requested-service">
+                <img src="{% static 'images/company.jpg' %}" alt="{{ service.name }} Icon">
+                <h3>{{ service.name }}</h3>
+                <p>{{ service.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
