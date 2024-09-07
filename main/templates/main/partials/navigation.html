@@ -1,8 +1,8 @@
-<nav class="hidden md:block">
-    <button @click="activeView = 'browse'" class="mx-2 hover:text-primary text-lg" :class="{'font-bold': activeView === 'browse'}">Browse Services</button>
-    <button @click="activeView = 'request'" class="mx-2 hover:text-primary text-lg" :class="{'font-bold': activeView === 'request'}">Request Service</button>
-    <button @click="activeView = 'offer'" class="mx-2 hover:text-primary text-lg" :class="{'font-bold': activeView === 'offer'}">Offer Service</button>
-    <button v-if="!isLoggedIn" @click="activeView = 'login'" class="mx-2 hover:text-primary text-lg" :class="{'font-bold': activeView === 'login'}">Login</button>
-    <button v-if="!isLoggedIn" @click="activeView = 'signup'" class="mx-2 hover:text-primary text-lg" :class="{'font-bold': activeView === 'signup'}">Sign Up</button>
-    <button v-if="isLoggedIn" @click="logout" class="mx-2 hover:text-primary text-lg">Logout</button>
+<nav>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
 </nav>
