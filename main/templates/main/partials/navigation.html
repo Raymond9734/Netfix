@@ -1,8 +1,22 @@
-<nav>
-    <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Services</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-    </ul>
-</nav>
+{% if user.is_authenticated %}
+{% if user.is_customer %}
+    <nav>
+        <ul>
+            <li><a href="{% url 'main:home' %}">Home</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="{% url 'customer_profile' name=user.username %}">Profile</a></li>
+        </ul>
+    </nav>
+   
+{% endif %}
+
+<div class="user-info">
+    <p>Welcome, {{ user.username }}!</p>
+</div>
+ <!-- Logout Icon -->
+ <div class="logout">
+    <a href="{% url 'main:logout' %}" title="Logout">
+        <i class="fas fa-sign-out-alt"></i>
+    </a>
+</div>
+{% endif %}
