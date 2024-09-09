@@ -3,7 +3,11 @@
 {% block title %}
   Company Registration
 {% endblock %}
-
+{% load static %}
+{% block extra_css %}
+<link href="{% static 'css/style2.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/home_page.css' %}">
+{% endblock %}
 {% block content %}
     <!-- Full viewport height container for centering -->
     <div class="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -104,7 +108,7 @@
             </form>
         </div>
     </div>
-{ block extra_js }
-<script src="{% static 'js/registration.js' %}"></script>
-{ endblock }
+    { block extra_js }
+    <script src="{% static 'js/registration.js' %}"></script>
+    { endblock }
 {% endblock %}

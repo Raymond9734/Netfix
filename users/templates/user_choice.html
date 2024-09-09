@@ -1,7 +1,9 @@
 {% extends 'main/base.html' %}
 
 {% load static %}
-
+{% block extra_css %}
+<link href="{% static 'css/style2.css' %}" rel="stylesheet">
+{% endblock %}
 {% block content %}
 <div class="full-height">
     <div class="container1">

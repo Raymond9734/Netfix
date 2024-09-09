@@ -3,7 +3,11 @@
 {% block title %}
   Customer Registration
 {% endblock %}
-
+{% load static %}
+{% block extra_css %}
+<link href="{% static 'css/style2.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/home_page.css' %}">
+{% endblock %}
 {% block content %}
     <div class="min-h-screen bg-gray-100 flex items-center justify-center">
         <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-6" style="margin: auto;">

@@ -1,21 +1,58 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
+from django.urls import reverse
 from django.views.generic import CreateView, TemplateView
-
+from django.contrib.auth import get_user_model
 from .forms import (
     CompanyRegistrationForm,
     CustomerRegistrationForm,
 )
-from .models import Company, Customer
+from .models import Company, Customer, User
+
+User = get_user_model()  # Get the custom User model
 
 
 def register(request):
     return render(request, "users/register.html")
 
 
-def LoginUserView(request):
-    pass
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        user_type = request.POST.get("user_type")
+
+        # Check if the user exists and authenticate
+        try:
+            user = User.objects.get(username=username, email=email)
+        except User.DoesNotExist:
+            messages.error(request, "Invalid username or email.")
+            return render(request, "login.html")
+
+        # Authenticate the user
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # Check if the user_type matches the registered user type
+            if user.is_company and user_type == "company":
+                login(request, user)
+                return redirect(reverse(
+                    "company_profile", kwargs={"name": username})
+                )  # Redirect to company profile
+            elif user.is_customer and user_type == "customer":
+                login(request, user)
+                return redirect("customer_profile")  # Redirect to customer profile
+            else:
+                messages.error(request, "User type mismatch.")
+                return render(request, "login.html")
+
+        # If authentication fails
+        messages.error(request, "Invalid username or password.")
+        return render(request, "login.html")
+
+    # If not POST, render the login page
+    return render(request, "login.html")
 
 
 def register_company(request):
