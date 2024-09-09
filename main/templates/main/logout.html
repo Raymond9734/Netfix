@@ -3,7 +3,10 @@
 {% block title %}
     Bye bye
 {% endblock %}
-
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/main_app.css' %}">
+{% endblock %}
 {% block content %}
     <div class="wrapper">
         <div id="logout-message" class="logout-container">
