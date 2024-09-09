@@ -1,33 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const editCompanyInfoBtn = document.getElementById('editCompanyInfo');
     const manageServicesBtn = document.getElementById('manageServices');
-    const addReviewBtn = document.getElementById('addReview');
     const companyServices = document.getElementById('companyServices');
-    const customerReviews = document.getElementById('customerReviews');
   
     
-    editCompanyInfoBtn.addEventListener('click', function() {
-        // Placeholder for edit company info functionality
-        alert('Edit company info functionality will be implemented here.');
-    });
-  
+
     manageServicesBtn.addEventListener('click', function() {
         companyServices.readOnly = !companyServices.readOnly;
         this.textContent = companyServices.readOnly ? 'Edit Services' : 'Save Services';
     });
-  
-    addReviewBtn.addEventListener('click', function() {
-        const reviewText = prompt('Enter your review:');
-        if (reviewText) {
-            const reviewElement = document.createElement('div');
-            reviewElement.className = 'review';
-            reviewElement.innerHTML = `
-                <p>${reviewText}</p>
-                <small>Anonymous - ${new Date().toLocaleDateString()}</small>
-            `;
-            customerReviews.appendChild(reviewElement);
-        }
-    });
+
   
    
   
