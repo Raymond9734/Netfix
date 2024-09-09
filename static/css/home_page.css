@@ -62,13 +62,14 @@ nav ul li a:hover {
 .search-bar {
     display: flex;
     align-items: center;
+    margin-left: 40px;
 }
 
 .search-bar input {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin-right: 10px;
+  
 }
 
 .search-bar button {
@@ -315,4 +316,34 @@ footer {
     .social-icons {
         margin-top: 20px;
     }
+}
+.user-info {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.user-info p {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+}
+/* Logout icon styling */
+.logout {
+    text-align: right;
+    margin: 20px 0;
+}
+
+.logout a {
+    color: #4CAF50; /* Green color for the icon */
+    font-size: 24px;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.logout a:hover {
+    color: #45a049; /* Darker green on hover */
+}
+
+.logout i {
+    vertical-align: middle;
 }
