@@ -25,19 +25,67 @@ class CompanySignUpForm(UserCreationForm):
 
 
 class UserLoginForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(UserLoginForm, self).__init__(*args, **kwargs)
-
+    username = forms.CharField(
+        required=False, widget=forms.TextInput(attrs={"placeholder": "Enter Username"})
+    )
     email = forms.EmailField(
-        widget=forms.TextInput(attrs={"placeholder": "Enter Email"})
+        required=False,
+        widget=forms.TextInput(
+            attrs={"placeholder": "Enter Email", "autocomplete": "off"}
+        ),
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={"placeholder": "Enter Password"})
     )
+    user_type = forms.ChoiceField(
+        choices=[("company", "Company"), ("customer", "Customer")],
+        widget=forms.RadioSelect,
+    )
 
-    def __init__(self, *args, **kwargs):
-        super(UserLoginForm, self).__init__(*args, **kwargs)
-        self.fields["email"].widget.attrs["autocomplete"] = "off"
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get("username")
+        email = cleaned_data.get("email")
+        password = cleaned_data.get("password")
+        user_type = cleaned_data.get("user_type")
+
+        # Check if either username or email is provided
+        if not username:
+            raise ValidationError("Username  is required.")
+        if not email:
+            raise ValidationError("Email is required")
+        if not password:
+            raise ValidationError("Password is required.")
+
+        # Find user by email or username
+        user = None
+        if email:
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                raise ValidationError("No user found with this email.")
+
+        if username:
+            try:
+                potential_user = User.objects.get(username=username)
+                if user is None:
+                    user = potential_user
+                elif user != potential_user:
+                    raise ValidationError("Username and email do not match.")
+            except User.DoesNotExist:
+                raise ValidationError("No user found with this username.")
+
+        if user:
+            # Authenticate the user
+            user = authenticate(username=user.username, password=password)
+            if user is None:
+                raise ValidationError("Invalid username or password.")
+            if user.is_company and user_type != "company":
+                raise ValidationError("User type mismatch.")
+            if user.is_customer and user_type != "customer":
+                raise ValidationError("User type mismatch.")
+
+        return cleaned_data
 
 
 # Form for handling user registration and validation
