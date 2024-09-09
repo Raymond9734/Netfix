@@ -8,8 +8,9 @@ def home(request):
     return render(request, 'users/home.html', {'user': request.user})
 
 
-def customer_profile(request):
-    pass
+def customer_profile(request,name):
+    user = User.objects.get(username=name)
+    return render(request, 'users/customer_profile.html', {'user': user})
 
 
 def company_profile(request, name):
