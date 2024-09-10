@@ -1,11 +1,18 @@
 {% extends 'main/base.html' %}
+{% load static %}
 {% block title %}
     Request Service
 {% endblock %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/request_service.css' %}">
+{% endblock %}
 {% block content %}
-    <p class="title">Service Request Details</p>
-    <form method="POST">
-        <button type="submit">Request</button>
+<div class="form-container">
+    <h1>Request {{ service.name }} from {{ company.username }} company</h1>
+    <form method="post" class="request-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
     </form>
+</div>
 {% endblock %}
