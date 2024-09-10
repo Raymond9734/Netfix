@@ -7,44 +7,34 @@
 {% endblock %}
 
 {% block content %}
-    
-    <div class="container3">
-        <div class="profile-card">
-            <div class="profile-header">
-                <img src="{% static 'images/user.jpg' %}" alt="User profile picture" class="profile-img" width="150" height="150">
-                <h2 class="profile-name">Hi, {{ user.username }}</h2>
-            </div>
-            <div class="profile-info">
-                <div class="info-item">
-                    <div class="info-label">Email</div>
-                    <div class="info-value">{{ user.email }}</div>
-                </div>
-                <!-- <div class="info-item">
-                    <div class="info-label">Phone</div>
-                    <div class="info-value">{{ user.profile.phone }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Address</div>
-                    <div class="info-value">{{ user.profile.address }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Member Since</div>
-                    <div class="info-value">{{ user.date_joined|date:"F d, Y" }}</div>
-                </div> -->
-            </div>
+<div class="container3">
+    <div class="profile-card">
+        <div class="profile-header">
+            <img src="{% static 'images/user.jpg' %}" alt="User profile picture" class="profile-img" width="150" height="150">
+            <h2 class="profile-name">Hi, {{ user.username }}</h2>
         </div>
-        
-        <div class="service-history">
-            <h3>Service Request History</h3>
-            {% for service in user.service_requests.all %}
-                <div class="service-item">
-                    <h4 class="service-title">{{ service.title }}</h4>
-                    <p>{{ service.description }}</p>
-                    <div class="service-date">Completed on: {{ service.completed_on|date:"F d, Y" }}</div>
-                </div>
-            {% empty %}
-                <p>No service history available.</p>
-            {% endfor %}
+        <div class="profile-info">
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ user.email }}</div>
+            </div>
         </div>
     </div>
+    
+    <div class="service-history">
+        <h3>Service Request History</h3>
+        {% for service in service_requests %}
+            <div class="service-item">
+                <h4 class="service-title">{{ service.service_field }}</h4>
+                <h5>Service Name: {{ service.service_name }}</h5>
+                <p>Service requested at: {{ service.address }}</p>
+                <p>Service Time: {{ service.service_time_hours }} hours</p>
+                <p>Status: {{ service.status }}</p>
+                <div class="service-date">Requested on: {{ service.requested_at|date:"F d, Y" }}</div>
+            </div>
+        {% empty %}
+            <p>No service history available.</p>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
