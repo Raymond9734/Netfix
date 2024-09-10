@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth import logout as django_logout
 
-
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from services.models import Service
 
 
+@login_required
 def home(request):
     # Query the Service model to get all services
     services = Service.objects.all()
