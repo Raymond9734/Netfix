@@ -11,7 +11,8 @@
                 <div class="service-card-content">
                     <h3>{{ service.name }}</h3>
                     <p>{{ service.description }}</p>
-                    <a href="#">Request Service</a>
+                    <p>service ID: {{ service.id }}</p>
+                    <a href="{% url 'services:request_service' company_name=service.company.username service_id=service.id %}">Request Service</a>
                 </div>
             </div>
             {% endfor %}
