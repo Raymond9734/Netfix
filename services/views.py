@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
@@ -42,7 +42,9 @@ def create(request):
                 price_hour=form.cleaned_data["price_hour"],
                 field=form.cleaned_data["field"],
             )
-            return redirect(reverse("company_profile", kwargs={"name":company.username}))
+            return redirect(
+                reverse("company_profile", kwargs={"name": company.username})
+            )
     else:
         # Set choices based on the company's field_of_work
         if company.field_of_work == "All in One":
@@ -64,5 +66,27 @@ def service_field(request, field):
     )
 
 
-def request_service(request, id):
-    return render(request, "services/request_service.html", {})
+def request_service(request, company_name, service_id):
+    company = get_object_or_404(Company, username=company_name)
+    service = get_object_or_404(Service, id=service_id)
+
+    if request.method == "POST":
+        form = RequestServiceForm(request.POST)
+        if form.is_valid():
+            requested_service = form.save(commit=False)
+            requested_service.company = company
+            requested_service.service_name = service  
+            requested_service.service_field = (
+                service.field
+            ) 
+            requested_service.requested_by = request.user
+            requested_service.save()
+            return redirect("main:home")
+    else:
+        form = RequestServiceForm()
+
+    return render(
+        request,
+        "services/request_service.html",
+        {"form": form, "company": company, "service": service},
+    )
