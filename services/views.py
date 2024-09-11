@@ -9,11 +9,6 @@ from .forms import CreateNewService, RequestServiceForm
 
 
 @login_required
-def service_list(request):
-    services = Service.objects.all().order_by("-date")
-    return render(request, "services/list.html", {"services": services})
-
-
 def index(request, id):
     service = Service.objects.get(id=id)
     return render(request, "services/single_service.html", {"service": service})
@@ -75,10 +70,8 @@ def request_service(request, company_name, service_id):
         if form.is_valid():
             requested_service = form.save(commit=False)
             requested_service.company = company
-            requested_service.service_name = service  
-            requested_service.service_field = (
-                service.field
-            ) 
+            requested_service.service_name = service
+            requested_service.service_field = service.field
             requested_service.requested_by = request.user
             requested_service.save()
             return redirect("main:home")
@@ -90,3 +83,9 @@ def request_service(request, company_name, service_id):
         "services/request_service.html",
         {"form": form, "company": company, "service": service},
     )
+
+
+def services_list(request):
+    # Fetch all services from the database
+    services = Service.objects.all().order_by("-date")  # Newest first by default
+    return render(request, "service_main.html", {"services": services})
