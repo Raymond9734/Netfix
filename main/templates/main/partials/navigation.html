@@ -3,7 +3,7 @@
     <nav>
         <ul>
             <li><a href="{% url 'main:home' %}">Home</a></li>
-            <li><a href="#">Services</a></li>
+            <li><a href="{% url 'services:service_list' %}">Services</a></li>
             <li><a href="{% url 'customer_profile' name=user.username %}">Profile</a></li>
         </ul>
     </nav>
