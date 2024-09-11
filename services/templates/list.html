@@ -7,11 +7,10 @@
         <div class="service-cards">
             {% for service in services %}
             <div class="service-card">
-                <img src="{% static 'images/company.jpg' %}" alt="{{ service.name }}">
+                <img src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="{{ service.name }}">
                 <div class="service-card-content">
                     <h3>{{ service.name }}</h3>
                     <p>{{ service.description }}</p>
-                    <p>service ID: {{ service.id }}</p>
                     <a href="{% url 'services:request_service' company_name=service.company.username service_id=service.id %}">Request Service</a>
                 </div>
             </div>
@@ -27,7 +26,7 @@
         <div class="most-requested-services">
             {% for service in most_requested_services %}
             <div class="most-requested-service">
-                <img src="{% static 'images/company.jpg' %}" alt="{{ service.name }} Icon">
+                <img src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="{{ service.name }} Icon">
                 <h3>{{ service.name }}</h3>
                 <p>{{ service.description }}</p>
             </div>

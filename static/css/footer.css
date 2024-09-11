@@ -1,0 +1,106 @@
+/* footer html */
+.footer-container {
+    background-color: #008000; /* Primary color */
+    color: white;
+    padding: 2rem;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.footer-section {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+
+
+@media(min-width: 768px) {
+    .footer-section--about,
+    .footer-section--links,
+    .footer-section--newsletter {
+        width: 30%;
+        margin-bottom: 0;
+    }
+}
+
+.footer-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.footer-description {
+    margin-bottom: 1rem;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-social-link {
+    color: #A5D6A7; /* Light green */
+    text-decoration: none;
+}
+
+.footer-social-link:hover {
+    color: white;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-link {
+    color: #A5D6A7; /* Light green */
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.footer-link:hover {
+    color: white;
+}
+
+.footer-newsletter-form {
+    display: flex;
+}
+
+.footer-newsletter-input {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border-radius: 0.5rem 0 0 0.5rem;
+    border: 1px solid #CCC;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.footer-newsletter-input:focus {
+    border-color: #81C784; /* Green border */
+}
+
+.footer-newsletter-button {
+    background-color: #388E3C; /* Dark green */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.footer-newsletter-button:hover {
+    background-color: #2C6B2F; /* Even darker green */
+}
+
+.footer-bottom {
+    text-align: center;
+    color: #A5D6A7; /* Light green */
+    margin-top: 1.5rem;
+}

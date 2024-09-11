@@ -221,6 +221,16 @@
 .profile-header {
     text-align: center;
     margin-bottom: 30px;
+    background-color: #008000;
+    border-radius: 10px;
+    padding: 10px;
+}
+.profile-header #companyName {
+    color: black;
+}
+.profile-header #companyIndustry {
+    color: black;
+    font-size: 20px;
 }
 
 .profile-photo {
@@ -230,6 +240,7 @@
     object-fit: cover;
     border: 5px solid #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: auto;
 }
 
 #companyName {

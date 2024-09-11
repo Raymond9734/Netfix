@@ -1,0 +1,173 @@
+<html><head><base href="https://websimcreationengine.com/services/all-services.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Services - Green & White Services</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0fff0;
+        color: #006400;
+    }
+    header {
+        background-color: #008000;
+        color: white;
+        text-align: center;
+        padding: 1rem;
+    }
+    nav {
+        background-color: #4CAF50;
+        padding: 0.5rem;
+    }
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+    }
+    nav ul li {
+        margin: 0 1rem;
+    }
+    nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    #services-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    .service-card {
+        background-color: white;
+        border: 1px solid #4CAF50;
+        border-radius: 5px;
+        padding: 1rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    .service-card:hover {
+        transform: translateY(-5px);
+    }
+    .service-card h3 {
+        color: #008000;
+        margin-top: 0;
+    }
+    .service-card p {
+        color: #333;
+    }
+    .service-card .category {
+        font-style: italic;
+        color: #4CAF50;
+    }
+    #sort-container {
+        margin-bottom: 1rem;
+        text-align: right;
+    }
+    #sort-select {
+        padding: 0.5rem;
+        border: 1px solid #4CAF50;
+        border-radius: 5px;
+        background-color: white;
+        color: #006400;
+    }
+    @media (max-width: 768px) {
+        nav ul {
+            flex-direction: column;
+            align-items: center;
+        }
+        nav ul li {
+            margin: 0.5rem 0;
+        }
+        #services-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+<body>
+    <header>
+        <h1>Green & White Services</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="https://websimcreationengine.com/services/index.html">Home</a></li>
+            <li><a href="https://websimcreationengine.com/services/most-requested.html">Most Requested</a></li>
+            <li><a href="https://websimcreationengine.com/services/all-services.html">All Services</a></li>
+            <li><a href="https://websimcreationengine.com/services/categories.html">Categories</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h2>All Services</h2>
+        <div id="sort-container">
+            <label for="sort-select">Sort by: </label>
+            <select id="sort-select">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="name">Name</option>
+                <option value="category">Category</option>
+            </select>
+        </div>
+        <div id="services-container">
+            <!-- Service cards will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <script>
+        const services = [
+            { id: 1, name: "Lawn Mowing", category: "Gardening", description: "Professional lawn mowing service", createdAt: new Date("2023-01-01") },
+            { id: 2, name: "House Cleaning", category: "Cleaning", description: "Thorough house cleaning service", createdAt: new Date("2023-01-15") },
+            { id: 3, name: "Dog Walking", category: "Pet Care", description: "Reliable dog walking service", createdAt: new Date("2023-02-01") },
+            { id: 4, name: "Window Washing", category: "Cleaning", description: "Expert window cleaning service", createdAt: new Date("2023-02-15") },
+            { id: 5, name: "Tree Trimming", category: "Gardening", description: "Professional tree trimming service", createdAt: new Date("2023-03-01") },
+            { id: 6, name: "Carpet Cleaning", category: "Cleaning", description: "Deep carpet cleaning service", createdAt: new Date("2023-03-15") },
+            { id: 7, name: "Pest Control", category: "Home Maintenance", description: "Effective pest control solutions", createdAt: new Date("2023-04-01") },
+            { id: 8, name: "Gutter Cleaning", category: "Home Maintenance", description: "Professional gutter cleaning service", createdAt: new Date("2023-04-15") },
+            { id: 9, name: "Cat Sitting", category: "Pet Care", description: "Loving cat sitting service", createdAt: new Date("2023-05-01") },
+            { id: 10, name: "Plumbing", category: "Home Maintenance", description: "Expert plumbing services", createdAt: new Date("2023-05-15") },
+        ];
+
+        function renderServices(services) {
+            return services.map(service => `
+                <div class="service-card">
+                    <h3>${service.name}</h3>
+                    <p class="category">Category: ${service.category}</p>
+                    <p>${service.description}</p>
+                    <p>Created: ${service.createdAt.toLocaleDateString()}</p>
+                </div>
+            `).join('');
+        }
+
+        function sortServices(services, sortBy) {
+            switch (sortBy) {
+                case 'newest':
+                    return services.sort((a, b) => b.createdAt - a.createdAt);
+                case 'oldest':
+                    return services.sort((a, b) => a.createdAt - b.createdAt);
+                case 'name':
+                    return services.sort((a, b) => a.name.localeCompare(b.name));
+                case 'category':
+                    return services.sort((a, b) => a.category.localeCompare(b.category));
+                default:
+                    return services;
+            }
+        }
+
+        function loadServices() {
+            const sortSelect = document.getElementById('sort-select');
+            const sortedServices = sortServices(services, sortSelect.value);
+            document.getElementById('services-container').innerHTML = renderServices(sortedServices);
+        }
+
+        document.getElementById('sort-select').addEventListener('change', loadServices);
+        window.addEventListener('load', loadServices);
+    </script>
+</body>
+</html>
