@@ -3,7 +3,11 @@
 {% block title %}
   Company Registration
 {% endblock %}
-
+{% load static %}
+{% block extra_css %}
+<link href="{% static 'css/style2.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/home_page.css' %}">
+{% endblock %}
 {% block content %}
     <!-- Full viewport height container for centering -->
     <div class="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -33,7 +37,7 @@
                 <!-- Username Field -->
                 <div class="form-group">
                     <label for="{{ form.username.id_for_label }}">Username:</label>
-                    <input type="text" name="username" id="{{ form.username.id_for_label }}" value="{{ form.username.value }}">
+                    <input type="text" name="username" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default_if_none:''  }}">
                     {% if form.username.errors %}
                         <div class="error">{{ form.username.errors }}</div>
                     {% endif %}
@@ -42,7 +46,7 @@
                 <!-- Email Field -->
                 <div class="form-group">
                     <label for="{{ form.email.id_for_label }}">Email:</label>
-                    <input type="email" name="email" id="{{ form.email.id_for_label }}" value="{{ form.email.value }}">
+                    <input type="email" name="email" id="{{ form.email.id_for_label }}">
                     {% if form.email.errors %}
                         <div class="error">{{ form.email.errors }}</div>
                     {% endif %}
@@ -51,7 +55,7 @@
                 <!-- Password Field -->
                 <div class="form-group">
                     <label for="{{ form.password.id_for_label }}">Password:</label>
-                    <input type="password" name="password" id="{{ form.password.id_for_label }}" value="{{ form.password.value }}">
+                    <input type="password" name="password" id="{{ form.password.id_for_label }}" value="{{ form.password.value|default_if_none:''  }}">
                     {% if form.password.errors %}
                         <div class="text-red-600 text-sm mt-1">{{ form.password.errors }}</div>
                     {% endif %}
@@ -60,7 +64,7 @@
                 <!-- Password Confirmation Field -->
                 <div class="form-group">
                     <label for="{{ form.password_confirmation.id_for_label }}">Confirm Password:</label>
-                    <input type="password" name="password_confirmation" id="{{ form.password_confirmation.id_for_label }}" value="{{ form.password_confirmation.value }}">
+                    <input type="password" name="password_confirmation" id="{{ form.password_confirmation.id_for_label }}" value="{{ form.password_confirmation.value|default_if_none:''  }}">
                     {% if form.password_confirmation.errors %}
                         <div class="text-red-600 text-sm mt-1">{{ form.password_confirmation.errors }}</div>
                     {% endif %}
@@ -89,7 +93,7 @@
                 <!-- Company Description Field (hidden initially) -->
                 <div class="form-group" id="descriptionField" style="display: none;">
                     <label for="description">Company Description:</label>
-                    <textarea name="description" id="description" rows="4" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">{{ form.description.value }}</textarea>
+                    <textarea name="description" id="description" rows="4" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">{{ form.description.value|default_if_none:''   }}</textarea>
                     {% if form.description.errors %}
                         <div class="text-red-600 text-sm mt-1">{{ form.description.errors }}</div>
                     {% endif %}
@@ -104,5 +108,7 @@
             </form>
         </div>
     </div>
-
+    { block extra_js }
+    <script src="{% static 'js/registration.js' %}"></script>
+    { endblock }
 {% endblock %}

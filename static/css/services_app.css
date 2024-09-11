@@ -1,0 +1,103 @@
+/* Wrapper to center the container */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+    min-height: 100vh; /* Ensures the content is centered vertically */
+   
+}
+
+/* Container to center the form and make it responsive */
+.container1 {
+    width: 100%;
+    max-width: 600px; /* Limits the width on larger screens */
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 100, 0, 0.1);
+}
+
+/* Header styling */
+.container1 h1 {
+    font-size: 24px;
+    text-align: center;
+    color: #006400; /* Dark green */
+    margin-bottom: 20px;
+}
+
+/* Form styling */
+.form-create {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Label styling */
+.labels {
+    margin-bottom: 5px;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #008000; /* Green */
+}
+
+/* Input and textarea styling */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #4CAF50; /* Green border */
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Specific textarea styling */
+#descriptions {
+    padding-left: 10px;
+    padding-top: 10px;
+    height: 100px;
+    resize: vertical;
+}
+
+/* Button styling */
+.button12 {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+/* Button hover effect */
+.button12:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+/* Error message styling */
+.error {
+    color: #ff6347; /* Tomato red for errors */
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container1 {
+        padding: 15px;
+    }
+    
+    .container1 h1 {
+        font-size: 22px;
+    }
+
+    .button12 {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Create New Service{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/services_app.css' %}">
+{% endblock %}
+{% block content %}
+<div class="wrapper">
+    <div class="container1">
+        <h1>Create New Service</h1>
+        <form class="form-create" id="serviceForm" method="POST" action="{% url 'services:services_create' %}">
+            {% csrf_token %}
+    
+            <label class="labels" for="name">Service Name:</label>
+            <input type="text" id="name" name="name" required>
+    
+            <label class="labels" for="description">Description:</label>
+            <textarea id="descriptions" name="description" required></textarea>
+    
+            <label class="labels" for="price_hour">Price per Hour:</label>
+            <input type="number" id="price_hour" name="price_hour" step="0.01" required>
+    
+            <label class="labels" for="field">Field:</label>
+            <select id="field" name="field" required>
+                {% for value, display in form.field.field.choices %}
+                    <option value="{{ value }}">{{ display }}</option>
+                {% endfor %}
+            </select>
+    
+            <button type="submit" class="button12">Create Service</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

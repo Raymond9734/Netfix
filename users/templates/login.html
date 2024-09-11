@@ -3,7 +3,10 @@
 {% block title %}
  User Login
 {% endblock %}
-
+{% load static %}
+{% block extra_css %}
+<link href="{% static 'css/style2.css' %}" rel="stylesheet">
+{% endblock %}
 {% block content %}
     <div class="min-h-screen bg-gray-100 flex items-center justify-center">
         <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-6" style="margin: auto;">
@@ -31,7 +34,7 @@
                 <!-- Username Field -->
                 <div class="form-group">
                     <label for="{{ form.username.id_for_label }}">Username:</label>
-                    <input type="text" name="username" id="{{ form.username.id_for_label }}" value="{{ form.username.value }}">
+                    <input type="text" name="username" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default_if_none:''  }}">
                     {% if form.username.errors %}
                         <div class="error">{{ form.username.errors }}</div>
                     {% endif %}
@@ -40,7 +43,7 @@
                 <!-- Email Field -->
                 <div class="form-group">
                     <label for="{{ form.email.id_for_label }}">Email:</label>
-                    <input type="email" name="email" id="{{ form.email.id_for_label }}" value="{{ form.email.value }}">
+                    <input type="email" name="email" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default_if_none:''  }}">
                     {% if form.email.errors %}
                         <div class="error">{{ form.email.errors }}</div>
                     {% endif %}
@@ -52,6 +55,26 @@
                     <input type="password" name="password" id="{{ form.password.id_for_label }}">
                     {% if form.password.errors %}
                         <div class="error">{{ form.password.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- User Type Field -->
+                <div class="form-group">
+                    <label>User Type:</label>
+                    <div>
+                        <label for="company">
+                            <input type="radio" id="company" name="user_type" value="company" {% if form.user_type.value == "company" %}checked{% endif %}>
+                            Company
+                        </label>
+                    </div>
+                    <div>
+                        <label for="customer">
+                            <input type="radio" id="customer" name="user_type" value="customer" {% if form.user_type.value == "customer" %}checked{% endif %}>
+                            Customer
+                        </label>
+                    </div>
+                    {% if form.user_type.errors %}
+                        <div class="error">{{ form.user_type.errors }}</div>
                     {% endif %}
                 </div>
 

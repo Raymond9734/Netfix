@@ -1,45 +1,40 @@
-{% extends 'main/base.html' %}
+{% extends 'base.html' %}
 
-{% block title %}
-    User Profile
+{% block title %}User Profile - Service Request{% endblock %}
+{% load static %}
+{% block extra_css %}
+<link href="{% static 'css/customer_profile.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-    {% if user.is_customer %}
-        <div id="customerProfile" class="profile-section">
-            <img src="https://websim.example.com/images/default-avatar.svg" alt="Customer profile photo" class="profile-photo" id="customerPhoto">
-            <div class="profile-info">
-                <h2 id="customerName">{{ user.username }} ({{user_age}} y/o)</h2>
-                <p id="customerEmail">{{ user.email }}</p>
-            </div>
-            <div class="profile-description">
-                <p id="customerDescription">A brief description of the customer goes here.</p>
-            </div>
-            <div class="form-group">
-                <label for="customerPreferences">Service Preferences:</label>
-                <textarea id="customerPreferences" rows="3"></textarea>
-            </div>
-            <div class="service-suggestions">
-                <h3>Suggested Services</h3>
-                <div id="serviceSuggestions">
-                    {% for service in sh %}
-                        <div>
-                            <a href="/services/{{service.service.id}}">{{service.service.name}}</a> ({{service.service.field}})
-                            <p style="margin: 0; display: inline-block;">❱❱ {{service.price}}</p>
-                            <p style="margin: 0; display: inline-block;">❱❱ {{ service.request_date }}</p>
-                            <p style="float: right; margin: 0;">
-                                by <a href="/company/{{service.service.company.user}}">{{service.service.company.user}}</a>
-                            </p> 
-                        </div>
-                        <div class="line"></div>
-                    {% endfor %}
-                </div>
-            </div>
-            <button id="editCustomerProfile" class="button">Edit Profile</button>
-            <button id="viewServices" class="button">View Services</button>
-            <button id="customerLogout" class="button">Logout</button>
+<div class="container3">
+    <div class="profile-card">
+        <div class="profile-header">
+            <img src="{% static 'images/user.jpg' %}" alt="User profile picture" class="profile-img" width="150" height="150">
+            <h2 class="profile-name">Hi, {{ user.username }}</h2>
         </div>
-    {% else %}
-        <p>You are not authorized to view this page.</p>
-    {% endif %}
+        <div class="profile-info">
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ user.email }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="service-history">
+        <h3>Service Request History</h3>
+        {% for service in service_requests %}
+            <div class="service-item">
+                <h4 class="service-title">{{ service.service_field }}</h4>
+                <h5>Service Name: {{ service.service_name }}</h5>
+                <p>Service requested at: {{ service.address }}</p>
+                <p>Service Time: {{ service.service_time_hours }} hours</p>
+                <p>Status: {{ service.status }}</p>
+                <div class="service-date">Requested on: {{ service.requested_at|date:"F d, Y" }}</div>
+            </div>
+        {% empty %}
+            <p>No service history available.</p>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

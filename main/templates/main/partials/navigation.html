@@ -1,8 +1,22 @@
-<nav class="hidden md:block">
-    <button @click="activeView = 'browse'" class="mx-2 hover:text-primary text-lg" :class="{'font-bold': activeView === 'browse'}">Browse Services</button>
-    <button @click="activeView = 'request'" class="mx-2 hover:text-primary text-lg" :class="{'font-bold': activeView === 'request'}">Request Service</button>
-    <button @click="activeView = 'offer'" class="mx-2 hover:text-primary text-lg" :class="{'font-bold': activeView === 'offer'}">Offer Service</button>
-    <button v-if="!isLoggedIn" @click="activeView = 'login'" class="mx-2 hover:text-primary text-lg" :class="{'font-bold': activeView === 'login'}">Login</button>
-    <button v-if="!isLoggedIn" @click="activeView = 'signup'" class="mx-2 hover:text-primary text-lg" :class="{'font-bold': activeView === 'signup'}">Sign Up</button>
-    <button v-if="isLoggedIn" @click="logout" class="mx-2 hover:text-primary text-lg">Logout</button>
-</nav>
+{% if user.is_authenticated %}
+{% if user.is_customer %}
+    <nav>
+        <ul>
+            <li><a href="{% url 'main:home' %}">Home</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="{% url 'customer_profile' name=user.username %}">Profile</a></li>
+        </ul>
+    </nav>
+   
+{% endif %}
+
+<div class="user-info">
+    <p>Welcome, {{ user.username }}!</p>
+</div>
+ <!-- Logout Icon -->
+ <div class="logout">
+    <a href="{% url 'main:logout' %}" title="Logout">
+        <i class="fas fa-sign-out-alt"></i>
+    </a>
+</div>
+{% endif %}

@@ -3,7 +3,10 @@
 {% block title %}
     Bye bye
 {% endblock %}
-
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/main_app.css' %}">
+{% endblock %}
 {% block content %}
     <div class="wrapper">
         <div id="logout-message" class="logout-container">
@@ -11,5 +14,8 @@
             <a href="{% url 'users:choose_registration' %}" class="logout-home-link">Return to home page</a>
         </div>
     </div>
+    {% block extra_js %}
+    <script src="{% static 'js/main_app.js' %}"></script>
+    {% endblock %}
 {% endblock %}
 
