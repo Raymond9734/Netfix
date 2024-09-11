@@ -1,0 +1,30 @@
+{% block services %}
+<main>
+    <h2>All Services</h2>
+    <div id="sort-container">
+        <label for="sort-select">Sort by: </label>
+        <select id="sort-select">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="name">Name</option>
+            <option value="category">Category</option>
+        </select>
+    </div>
+
+    <div id="services-container">
+        {% for service in services %}
+        <div class="service-card">
+            <h3>{{ service.name }}</h3>
+            <p><strong>Category:</strong> {{ service.get_field_display }}</p>
+            <p><strong>Company:</strong> {{ service.company.name }}</p>
+            <p>{{ service.description }}</p>
+            <p><strong>Price per hour:</strong> ${{ service.price_hour }}</p>
+            <p><strong>Rating:</strong> {{ service.rating }} / 5</p>
+            <p><strong>Posted on:</strong> {{ service.date|date:"F j, Y" }}</p>
+        </div>
+        {% empty %}
+        <p>No services available.</p>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}
