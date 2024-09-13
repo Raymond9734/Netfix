@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/services_display.css' %}">
+<link rel="stylesheet" href="{% static 'css/service_by_category.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% include 'partials/service_subHeader.html' %}
+    <div class="main-div2">
+        <section id="categories">
+            <h2>Service Categories</h2>
+            <div class="category-container" id="category-container"></div>
+        </section>
+        <section id="all-services">
+            <h3>Services</h3>
+            <div class="service-container" id="service-container"></div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+{{ services|json_script:"services-data" }}
+{{ categories|json_script:"categories-data" }}
+{{ request.user.is_customer|json_script:"is-customer" }}
+<script src="{% static 'js/service_by_category.js' %}"></script>
+{% endblock %}
