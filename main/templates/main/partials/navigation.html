@@ -1,17 +1,16 @@
 {% if user.is_authenticated %}
-{% if user.is_customer %}
+{% if request.user.is_customer %}
     <nav>
         <ul>
             <li><a href="{% url 'main:home' %}">Home</a></li>
             <li><a href="{% url 'services:service_list' %}">Services</a></li>
-            <li><a href="{% url 'customer_profile' name=user.username %}">Profile</a></li>
+            <li><a href="{% url 'customer_profile' name=request.user.username %}">Profile</a></li>
         </ul>
     </nav>
-   
 {% endif %}
 
 <div class="user-info">
-    <p>Welcome, {{ user.username }}!</p>
+    <p>Welcome, {{ request.user.username }}!</p>
 </div>
  <!-- Logout Icon -->
  <div class="logout">
