@@ -12,4 +12,10 @@ urlpatterns = [
         name="request_service",
     ),
     path("service_list/", v.services_list, name="service_list"),
+    path("service_category/", v.service_by_category, name="service_by_category"),
+    path(
+        "most_requested_service/",
+        v.most_requested_services,
+        name="most_requested_services",
+    ),
 ]

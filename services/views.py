@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
 from django.urls import reverse
-
+from django.db.models import Count
 from users.models import Company, Customer, User
 from django.contrib.auth.decorators import login_required
-from .models import Service
+from .models import Service, RequestedService
 from .forms import CreateNewService, RequestServiceForm
+from django.core.serializers import serialize
+import json
 
 
 @login_required
@@ -89,3 +90,63 @@ def services_list(request):
     # Fetch all services from the database
     services = Service.objects.all().order_by("-date")  # Newest first by default
     return render(request, "service_main.html", {"services": services})
+
+
+def service_by_category(request):
+    services = Service.objects.all().select_related("company")
+    services_json = json.loads(serialize("json", services))
+
+    # Extract the fields we need for services, including company data
+    services_data = [
+        {
+            "id": service["pk"],
+            "name": service["fields"]["name"],
+            "description": service["fields"]["description"],
+            "price_hour": str(
+                service["fields"]["price_hour"]
+            ),  # Convert Decimal to string
+            "rating": service["fields"]["rating"],
+            "field": service["fields"]["field"],
+            "company": {
+                "id": service["fields"]["company"],
+                "username": services[
+                    i
+                ].company.username,  # Assuming `name` is a field in the `Company` model
+            },
+        }
+        for i, service in enumerate(services_json)
+    ]
+
+    # Prepare categories data
+    categories_data = [
+        {"id": choice[0], "name": choice[1]} for choice in Service.choices
+    ]
+
+    context = {
+        "services": services_data,
+        "categories": categories_data,
+    }
+    return render(request, "services/service_by_category.html", context)
+
+
+def most_requested_services(request):
+    # Group by service_name and count how many times each service_name has been requested
+    services = (
+        RequestedService.objects.values(
+            "service_name", "service_field", "company__username"
+        )
+        .annotate(request_count=Count("service_name"))
+        .order_by("-request_count")[:10]
+    )
+
+    # Convert QuerySet to a list of dictionaries
+    services_list = list(services)  # Convert QuerySet to a list
+
+    # Render the template with the services data
+    return render(
+        request,
+        "services/most_requested_services.html",
+        {
+            "services": services_list,  # Pass the list to the template
+        },
+    )

@@ -8,7 +8,6 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/style2.css' %}">
-
 {% endblock %}
 {% block content %}
 <div class="company-profile-container">
@@ -49,11 +48,14 @@
     </section>
 
     <section class="profile-actions">
-        <a  href="{% url 'services:services_create' %}"  id="addReview" class="button1"><i class="fas fa-plus"></i> Add New Service</a>
-        <button id="editCompanyInfo" class="button1"><i class="fas fa-edit"></i> Edit Company Info</button>
-        <button id="manageServices" class="button1"><i class="fas fa-cogs"></i> Manage Services</button>
-        <a href="{% url 'main:logout' %}" class="button1"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </section>
+        {% if request.user.is_company %}
+            <a href="{% url 'services:services_create' %}" id="addReview" class="button1"><i class="fas fa-plus"></i> Add New Service</a>
+            <button id="editCompanyInfo" class="button1"><i class="fas fa-edit"></i> Edit Company Info</button>
+            <a href="{% url 'services:service_list' %}" id="manageServices" class="button1"><i class="fas fa-cogs"></i> View Services</a>
+            <a href="{% url 'main:logout' %}" class="button1"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        {% endif %}
+     </section>
+    
 </div>
 {% block extra_js %}
 <script src="{% static 'js/company-profile.js' %}"></script>

@@ -1,8 +1,12 @@
-
 <nav class="service-nav">
     <ul>
-        <li><a href="#">Most Requested</a></li>
+        {% if request.user.is_customer %}
+        <li><a href="{% url 'services:most_requested_services' %}">Most Requested</a></li>
+        {% endif %}
+        {% if request.user.is_company %}
+        <li><a href="{% url 'company_profile' name=request.user.username %}">Profile</a></li>
+        {% endif %}
         <li><a href="{% url 'services:service_list' %}">All Services</a></li>
-        <li><a href="#">Categories</a></li>
+        <li><a href="{% url 'services:service_by_category' %}">Categories</a></li>
     </ul>
 </nav>

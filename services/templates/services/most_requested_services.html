@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/services_display.css' %}">
+<link rel="stylesheet" href="{% static 'css/most_requested_services.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'partials/service_subHeader.html' %}
+    <div class="main-div4">
+        <h2>Most Requested Services</h2>
+        <div id="services-container">
+            {% for service in services %}
+                <div class="service-card">
+                    <h3>{{ service.service_name }}</h3>
+                    <p class="category">Category: {{ service.service_field }}</p>
+                    <p><strong>Company: </strong>{{ service.company__username }}</p>
+
+                </div>
+            {% endfor %}
+        </div>
+        <div id="chart-container">
+            <canvas id="servicesChart"></canvas>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+{{ services|json_script:"services" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/most_requested_services.js' %}"></script>
+{% endblock %}

@@ -1,6 +1,6 @@
-from django.shortcuts import render
-
-from users.models import User, Company
+from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
+from users.models import User, Company, Customer
 from services.models import RequestedService, Service
 
 
@@ -9,14 +9,35 @@ def home(request):
 
 
 def customer_profile(request, name):
-    user = User.objects.get(username=name)
+    # Get the User object or return a 404 if not found
+    user = get_object_or_404(User, username=name)
+
+    # Get the Customer instance related to this User
+    customer = get_object_or_404(Customer, user=user)
+
+    # Get service requests for the logged-in user
     service_requests = RequestedService.objects.filter(requested_by=request.user)
+
+    # Calculate the current age of the customer
+    today = timezone.now().date()
+    age = (
+        today.year
+        - customer.date_of_birth.year
+        - (
+            (today.month, today.day)
+            < (customer.date_of_birth.month, customer.date_of_birth.day)
+        )
+    )
+
+    # Render the profile template with the user, customer details, and service requests
     return render(
         request,
         "users/customer_profile.html",
         {
             "user": user,
+            "customer": customer,
             "service_requests": service_requests,
+            "age": age,  # Pass the age to the template
         },
     )
 

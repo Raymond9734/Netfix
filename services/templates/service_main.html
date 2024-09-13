@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 {% load static %}
 {% block extra_css %}
@@ -26,7 +25,13 @@
                 <p><strong>Price per hour:</strong> ${{ service.price_hour }}</p>
                 <p><strong>Rating:</strong> {{ service.rating }} / 5</p>
                 <p><strong>Posted on:</strong> {{ service.date|date:"F j, Y" }}</p>
-                <p><a href="#">Posted by:</strong> {{ service.company.username }}</a></p>
+
+                <!-- Check if the current user is a company -->
+                {% if request.user.is_company %}
+                    <p><strong>Posted by:</strong> {{ service.company.username }}</p>  <!-- Display as text -->
+                {% else %}
+                <a href="{% url 'company_profile' name=service.company.username %}">Posted by: {{ service.company.username }}</a>  <!-- Display as link -->
+                {% endif %}
             </div>
             {% empty %}
             <p>No services available.</p>
@@ -37,4 +42,3 @@
     <script src="{% static 'js/services.js' %}"></script>
     {% endblock %}
 {% endblock %}
-
