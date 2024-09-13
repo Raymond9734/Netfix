@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/services_display.css' %}">
+<link rel="stylesheet" href="{% static 'css/most_requested_services.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'partials/service_subHeader.html' %}
+    <div class="main-div4">
+        <h2>Most Requested Services</h2>
+        <div id="services-container">
+            {% for service in services %}
+                <div class="service-card">
+                    <h3>{{ service.service_name }}</h3>
+                    <p class="category">Category: {{ service.service_field }}</p>
+                    <p><strong>Company: </strong>{{ service.company__username }}</p>
+
+                </div>
+            {% endfor %}
+        </div>
+        <div id="chart-container">
+            <canvas id="servicesChart"></canvas>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+{{ services|json_script:"services" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Parse the services data provided by the Django view in JSON format for JavaScript usage
+        const services = JSON.parse(document.getElementById('services').textContent);
+
+        function createChart() {
+            const ctx = document.getElementById('servicesChart').getContext('2d');
+            const labels = services.map(service => service.service_name);  // Extract service names for chart labels
+            const data = services.map(service => service.request_count);  // Extract request counts for chart data
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Requests',
+                        data: data,
+                        backgroundColor: 'rgba(76, 175, 80, 0.6)',  // Green color
+                        borderColor: 'rgba(76, 175, 80, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Requests'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Services'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Most Requested Services'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create the chart after the page content is fully loaded
+        createChart();
+    });
+</script>
+{% endblock %}
