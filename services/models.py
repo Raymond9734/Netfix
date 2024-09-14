@@ -57,7 +57,39 @@ class RequestedService(models.Model):
     )
     requested_by = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="requested_services"
-    )  # New field to track the user who requested the service
+    )
+
+    # New fields for review and rating
+    customer_review = models.TextField(
+        blank=True, null=True
+    )  # Optional customer feedback
+    rating = models.IntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(5)], default=0
+    )  # Rating given by the customer
+
+    # Override save method to update service rating
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Save the requested service first
+
+        # Find the corresponding service
+        service = Service.objects.filter(name=self.service_name, company=self.company).first()
+        
+        if service is None:
+            return  # Or handle the case where the service does not exist
+
+        # Recalculate the average rating for the service
+        requested_services = RequestedService.objects.filter(
+            company=self.company, service_name=self.service_name
+        )
+        if requested_services.count() == 0:
+            return  # Avoid division by zero
+
+        total_rating = sum([req_service.rating for req_service in requested_services])
+        new_average_rating = total_rating / requested_services.count()
+
+        # Update the service's rating
+        service.rating = round(new_average_rating)  # Optional: Round to nearest integer
+        service.save()
 
     def __str__(self):
         return f"{self.service_field} - {self.company.username} - {self.status}"
