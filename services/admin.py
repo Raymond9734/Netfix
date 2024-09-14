@@ -5,7 +5,7 @@ from .models import Service,RequestedService
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "price_hour", "field", "date")
+    list_display = ("id", "name", "price_hour", "field", "date","rating")
 
 
 class RequestedServiceAdmin(admin.ModelAdmin):
@@ -17,7 +17,9 @@ class RequestedServiceAdmin(admin.ModelAdmin):
         "address",
         "service_time_hours",
         "requested_at",
+        "customer_review",
         "status",
+        "rating",
     )
     list_filter = ("status", "company")
     search_fields = ("service_field", "address", "company__name")
