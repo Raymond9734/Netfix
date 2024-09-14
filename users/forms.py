@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, authenticate
 from django.db import transaction
 from django.core.exceptions import ValidationError
+from datetime import date, timedelta
 
 from .models import User, Company, Customer
 
@@ -145,8 +146,17 @@ class CustomerRegistrationForm(forms.ModelForm):
     password_confirmation = forms.CharField(
         widget=forms.PasswordInput, label="Confirm Password"
     )
+    today = date.today()
+    max_date = today - timedelta(days=365 * 3)  # 3 years ago from today
+
     date_of_birth = forms.DateField(
-        widget=forms.DateInput(attrs={"type": "date"}), label="Date of Birth"
+        widget=forms.DateInput(
+            attrs={
+                "type": "date",
+                "max": max_date.strftime("%Y-%m-%d"),  # Format the max date
+            }
+        ),
+        label="Date of Birth",
     )
 
     class Meta:
