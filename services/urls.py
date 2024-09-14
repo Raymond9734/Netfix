@@ -18,4 +18,5 @@ urlpatterns = [
         v.most_requested_services,
         name="most_requested_services",
     ),
+    
 ]
