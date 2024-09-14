@@ -70,12 +70,15 @@
 
                 <!-- Date of Birth Field -->
                 <div class="form-group">
-                    <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth:</label>
-                    <input type="date" name="date_of_birth" id="{{ form.date_of_birth.id_for_label }}">
-                    {% if form.date_of_birth.errors %}
-                        <div class="error">{{ form.date_of_birth.errors }}</div>
-                    {% endif %}
+                    <div class="form-group">
+                        <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth:</label>
+                        <input type="date" name="date_of_birth" id="{{ form.date_of_birth.id_for_label }}" max="{{ form.date_of_birth.field.widget.attrs.max }}">
+                        {% if form.date_of_birth.errors %}
+                            <div class="error">{{ form.date_of_birth.errors }}</div>
+                        {% endif %}
+                   </div>
                 </div>
+                    
 
                 <!-- Submit Button -->
                 <div class="form-group">
