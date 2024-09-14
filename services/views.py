@@ -7,6 +7,11 @@ from .models import Service, RequestedService
 from .forms import CreateNewService, RequestServiceForm
 from django.core.serializers import serialize
 import json
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib import messages
+
+from django.views.decorators.csrf import csrf_exempt
 
 
 @login_required
@@ -150,3 +155,56 @@ def most_requested_services(request):
             "services": services_list,  # Pass the list to the template
         },
     )
+
+
+@require_POST
+@login_required
+def submit_review(request, service_id):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            review = data.get("review", "")
+            rating = int(data.get("rating", 0))
+            status = data.get("status", "in_progress")
+
+            # Ensure that the rating is between 0 and 5
+            if rating < 0 or rating > 5:
+                return JsonResponse({"success": False, "message": "Invalid rating."})
+
+            # Find the requested service
+            requested_service = RequestedService.objects.get(id=service_id)
+
+            # Update the requested service with the review and rating
+            requested_service.customer_review = review
+            requested_service.rating = rating
+            requested_service.status = status
+            requested_service.save()
+
+            return JsonResponse({"success": True})
+        except RequestedService.DoesNotExist:
+            return JsonResponse({"success": False, "message": "Service not found."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
+    else:
+        return JsonResponse({"success": False, "message": "Invalid request method."})
+
+
+@require_POST
+@login_required
+def mark_service_complete(request, service_id):
+    """
+    Marks a requested service as completed.
+    """
+    service = get_object_or_404(
+        RequestedService, id=service_id, requested_by=request.user
+    )
+
+    if service.status == "completed":
+        return JsonResponse(
+            {"success": False, "error": "Service is already completed."}
+        )
+
+    service.status = "completed"
+    service.save()
+
+    return JsonResponse({"success": True})

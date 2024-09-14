@@ -43,10 +43,21 @@ def customer_profile(request, name):
 
 
 def company_profile(request, name):
-    # fetches the company user and all of the services available by it
+    # Fetch the company user
     user = User.objects.get(username=name)
+
+    # Fetch the company's services
     services = Service.objects.filter(company=Company.objects.get(user=user)).order_by(
         "-date"
     )
 
-    return render(request, "users/profile.html", {"user": user, "services": services})
+    # Fetch customer reviews for the company
+    reviews = RequestedService.objects.filter(company__user=user).order_by(
+        "-requested_at"
+    )
+
+    return render(
+        request,
+        "users/profile.html",
+        {"user": user, "services": services, "reviews": reviews},
+    )

@@ -43,7 +43,24 @@
     <section class="customer-reviews">
         <h2>Customer Reviews</h2>
         <div id="customerReviews">
-            <!-- Reviews will be dynamically added here -->
+            {% if reviews %}
+                {% for review in reviews %}
+                    <div class="review-item">
+                        <div class="review-title">{{ review.service_name }} - {{ review.service_field }}</div>
+                        <div class="star-rating">
+                            <span class="star{% if review.rating >= 1 %} filled{% endif %}">★</span>
+                            <span class="star{% if review.rating >= 2 %} filled{% endif %}">★</span>
+                            <span class="star{% if review.rating >= 3 %} filled{% endif %}">★</span>
+                            <span class="star{% if review.rating >= 4 %} filled{% endif %}">★</span>
+                            <span class="star{% if review.rating >= 5 %} filled{% endif %}">★</span>
+                        </div>                      
+                        <div class="review-content">{{ review.customer_review }}</div>
+                        <div class="review-date">Requested  on: {{ review.requested_at|date:"F d, Y" }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No reviews yet.</p>
+            {% endif %}
         </div>
     </section>
 

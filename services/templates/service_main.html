@@ -23,7 +23,13 @@
                 <h3 class="h3-text">{{ service.name }}</h3>
                 <p class="category"><strong>Category:</strong> {{ service.get_field_display }}</p>
                 <p><strong>Price per hour:</strong> ${{ service.price_hour }}</p>
-                <p><strong>Rating:</strong> {{ service.rating }} / 5</p>
+                <div class="star-rating">
+                    <span class="star{% if service.rating >= 1 %} filled{% endif %}">★</span>
+                    <span class="star{% if service.rating >= 2 %} filled{% endif %}">★</span>
+                    <span class="star{% if service.rating >= 3 %} filled{% endif %}">★</span>
+                    <span class="star{% if service.rating >= 4 %} filled{% endif %}">★</span>
+                    <span class="star{% if service.rating >= 5 %} filled{% endif %}">★</span>
+                </div>
                 <p><strong>Posted on:</strong> {{ service.date|date:"F j, Y" }}</p>
 
                 <!-- Check if the current user is a company -->

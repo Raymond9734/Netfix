@@ -80,3 +80,17 @@
         grid-template-columns: 1fr;
     }
 }
+.star-rating {
+    font-size: 24px; /* Adjust size as needed */
+    color: #d3d3d3; /* Light gray for empty stars */
+    
+}
+
+.star {
+    display: inline-block;
+    font-size: 24px; /* Same as above for consistency */
+}
+
+.star.filled {
+    color: #f39c12; /* Yellow for filled stars */
+}

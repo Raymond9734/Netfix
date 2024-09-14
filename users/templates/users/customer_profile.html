@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-
 {% block title %}User Profile - Service Request{% endblock %}
 {% load static %}
 {% block extra_css %}
 <link href="{% static 'css/customer_profile.css' %}" rel="stylesheet">
+<link href="{% static 'css/service_review.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -25,17 +25,65 @@
     <div class="service-history">
         <h3>Service Request History</h3>
         {% for service in service_requests %}
+         {% if service.status != 'completed' %}
+            <a class="service-item" href="javascript:void(0);" onclick="openPopup('{{ service.service_field }}', '{{ service.service_name }}', '{{ service.address }}', '{{ service.service_time_hours }}', '{{ service.status }}', '{{ service.id }}')">
+                <h4 class="service-title">{{ service.service_field }}</h4>
+                <h5>Service Name: {{ service.service_name }}</h5>
+                <p>Service requested at: {{ service.address }}</p>
+                <p>Service Time: {{ service.service_time_hours }} hours</p>
+                <p>Status: <span class="service-status {% if service.status == 'completed' %}status-completed{% else %}status-in-progress{% endif %}">
+                    {{ service.status }}
+                </span></p>
+                <div class="service-date">Requested on: {{ service.requested_at|date:"F d, Y" }}</div>
+            </a>
+         {% else %}
             <div class="service-item">
                 <h4 class="service-title">{{ service.service_field }}</h4>
                 <h5>Service Name: {{ service.service_name }}</h5>
                 <p>Service requested at: {{ service.address }}</p>
                 <p>Service Time: {{ service.service_time_hours }} hours</p>
-                <p>Status: {{ service.status }}</p>
+                <p>Status: <span class="service-status {% if service.status == 'completed' %}status-completed{% else %}status-in-progress{% endif %}">
+                    {{ service.status }}
+                </span></p>
                 <div class="service-date">Requested on: {{ service.requested_at|date:"F d, Y" }}</div>
             </div>
+         {% endif %}
         {% empty %}
             <p>No service history available.</p>
         {% endfor %}
     </div>
 </div>
+
+<!-- Popup HTML structure -->
+<div class="overlay" id="overlay"></div>
+
+<div class="popup" id="popup">
+    <span class="close-btn" onclick="closePopup()">&times;</span>
+    <h2>Plumbing Service Review</h2>
+    <div class="info">
+        <p><strong>Service Name:</strong> <span id="popupServiceName"></span></p>
+        <p><strong>Service requested at:</strong> <span id="popupAddress"></span></p>
+        <p><strong>Service Time:</strong> <span id="popupServiceTime"></span> hours</p>
+        <p><strong>Status:</strong> <span class="status" id="popupStatus"></span></p>
+        <p><strong>Requested on:</strong> <span id="popupRequestedAt"></span></p>
+    </div>
+    <div class="rating">
+        <span class="star" data-rating="1">★</span>
+        <span class="star" data-rating="2">★</span>
+        <span class="star" data-rating="3">★</span>
+        <span class="star" data-rating="4">★</span>
+        <span class="star" data-rating="5">★</span>
+    </div>
+    <textarea id="review" rows="5" placeholder="Write your review here..."></textarea>
+    <button id="submitReview">Submit Review</button>
+    <button id="markComplete">Mark as Completed</button>
+    <p class="success-message" id="successMessage"></p>
+     <!-- Hidden form for CSRF token submission -->
+     <form method="post" style="display: none;">
+        {% csrf_token %}
+    </form>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/customer_profile.js' %}"></script>
 {% endblock %}
