@@ -12,7 +12,7 @@ let csrfToken = document.querySelector('form [name=csrfmiddlewaretoken]').value;
 let serviceId = 0
 
 // Function to open the popup and populate it with service details
-function openPopup(serviceField, serviceName, address, serviceTime, status, serviceID) {
+function openPopup(serviceName, address, serviceTime, status, serviceID) {
     document.getElementById('popupServiceName').textContent = serviceName;
     document.getElementById('popupAddress').textContent = address;
     document.getElementById('popupServiceTime').textContent = serviceTime;
