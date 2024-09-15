@@ -7,7 +7,7 @@ urlpatterns = [
     path("create/", v.create, name="services_create"),
     path("<int:id>", v.index, name="index"),
     path(
-        "request_service/<slug:company_name>/<int:service_id>/",
+        "request_service/<str:company_name>/<int:service_id>/",
         v.request_service,
         name="request_service",
     ),
@@ -18,5 +18,5 @@ urlpatterns = [
         v.most_requested_services,
         name="most_requested_services",
     ),
-    
+    path("service_detail/<int:service_id>/", v.service_detail, name="service_detail"),
 ]
