@@ -45,18 +45,21 @@
         <div id="customerReviews">
             {% if reviews %}
                 {% for review in reviews %}
-                    <div class="review-item">
-                        <div class="review-title">{{ review.service_name }} - {{ review.service_field }}</div>
-                        <div class="star-rating">
-                            <span class="star{% if review.rating >= 1 %} filled{% endif %}">★</span>
-                            <span class="star{% if review.rating >= 2 %} filled{% endif %}">★</span>
-                            <span class="star{% if review.rating >= 3 %} filled{% endif %}">★</span>
-                            <span class="star{% if review.rating >= 4 %} filled{% endif %}">★</span>
-                            <span class="star{% if review.rating >= 5 %} filled{% endif %}">★</span>
-                        </div>                      
-                        <div class="review-content">{{ review.customer_review }}</div>
-                        <div class="review-date">Requested  on: {{ review.requested_at|date:"F d, Y" }}</div>
-                    </div>
+                    {% if review.customer_review %}
+                        <div class="review-item">
+                            <div class="review-title">{{ review.service_name }} - {{ review.service_field }}</div>
+                            <div> <strong>Comment by: </strong> {{ review.requested_by }}</div>
+                            <div class="star-rating">
+                                <span class="star{% if review.rating >= 1 %} filled{% endif %}">★</span>
+                                <span class="star{% if review.rating >= 2 %} filled{% endif %}">★</span>
+                                <span class="star{% if review.rating >= 3 %} filled{% endif %}">★</span>
+                                <span class="star{% if review.rating >= 4 %} filled{% endif %}">★</span>
+                                <span class="star{% if review.rating >= 5 %} filled{% endif %}">★</span>
+                            </div>
+                            <div class="review-content">{{ review.customer_review }}</div>
+                            <div class="review-date">Requested on: {{ review.requested_at|date:"F d, Y" }}</div>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             {% else %}
                 <p>No reviews yet.</p>
@@ -67,7 +70,6 @@
     <section class="profile-actions">
         {% if request.user.is_company %}
             <a href="{% url 'services:services_create' %}" id="addReview" class="button1"><i class="fas fa-plus"></i> Add New Service</a>
-            <button id="editCompanyInfo" class="button1"><i class="fas fa-edit"></i> Edit Company Info</button>
             <a href="{% url 'services:service_list' %}" id="manageServices" class="button1"><i class="fas fa-cogs"></i> View Services</a>
             <a href="{% url 'main:logout' %}" class="button1"><i class="fas fa-sign-out-alt"></i> Logout</a>
         {% endif %}
