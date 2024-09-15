@@ -4,12 +4,14 @@ document.getElementById('sort-select').addEventListener('change', function () {
     const serviceCards = Array.from(serviceContainer.children);
 
     serviceCards.sort((a, b) => {
-        if (sortBy === 'newest') {
-            // Sort by the newest date
-            return new Date(b.querySelector('p:nth-of-type(4)').textContent.split('Posted on: ')[1]) - new Date(a.querySelector('p:nth-of-type(4)').textContent.split('Posted on: ')[1]);
+        if (sortBy === 'newest' || sortBy === 'oldest') {
+            const dateA = new Date(a.querySelector('.posted-date').textContent.split('Posted on: ')[1]);
+            const dateB = new Date(b.querySelector('.posted-date').textContent.split('Posted on: ')[1]);
+
+            return sortBy === 'newest' ? dateB - dateA : dateA - dateB;
         } else if (sortBy === 'oldest') {
             // Sort by the oldest date
-            return new Date(a.querySelector('p:nth-of-type(4)').textContent.split('Posted on: ')[1]) - new Date(b.querySelector('p:nth-of-type(4)').textContent.split('Posted on: ')[1]);
+            return new Date(a.querySelector('.posted-date').textContent.split('Posted on: ')[1]) - new Date(b.querySelector('.posted-date').textContent.split('Posted on: ')[1]);
         } else if (sortBy === 'name') {
             // Sort by service name
             return a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent);
