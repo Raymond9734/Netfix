@@ -40,6 +40,7 @@ body {
     text-decoration: none;
 }
 
+
 nav ul {
     display: flex;
     list-style-type: none;
@@ -57,33 +58,6 @@ nav ul li a {
 
 nav ul li a:hover {
     color: #4CAF50;
-}
-
-.search-bar {
-    display: flex;
-    align-items: center;
-    margin-left: 40px;
-}
-
-.search-bar input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  
-}
-
-.search-bar button {
-    padding: 8px 15px;
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.search-bar button:hover {
-    background-color: #45a049;
 }
 
 /* Hero section styles */
@@ -275,48 +249,6 @@ footer {
     color: #4CAF50;
 }
 
-/* Responsive styles */
-@media screen and (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    nav ul {
-        margin-top: 15px;
-    }
-
-    .search-bar {
-        margin-top: 15px;
-    }
-
-    .service-card {
-        width: 100%;
-    }
-
-    .most-requested-services {
-        flex-wrap: wrap;
-    }
-
-    .most-requested-service {
-        width: calc(50% - 20px);
-        margin-bottom: 20px;
-    }
-
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .footer-links ul {
-        justify-content: center;
-        margin-bottom: 20px;
-    }
-
-    .social-icons {
-        margin-top: 20px;
-    }
-}
 .user-info {
     text-align: center;
     margin: 20px 0;
@@ -346,4 +278,89 @@ footer {
 
 .logout i {
     vertical-align: middle;
+}
+.menu-toggle {
+    display: none;
+    font-size: 1.5em;
+    color: white;
+    cursor: pointer;
+}
+.signh-out {
+    display: none;
+}
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+
+    .service-card {
+        width: 100%;
+    }
+
+    .most-requested-services {
+        flex-wrap: wrap;
+    }
+
+    .most-requested-service {
+        width: calc(50% - 20px);
+        margin-bottom: 20px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-links ul {
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .social-icons {
+        margin-top: 20px;
+    }
+    .nav-head ul {
+        display: none;
+        flex-direction: column;
+        background-color: #4CAF50;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .nav-head ul li {
+        margin: 10px 0;
+    }
+    .signh-out{
+        display: block;
+    }
+    .menu-toggle {
+        display: block;
+        font-size: 1.5em;
+        color: #333;
+        cursor: pointer;
+    }
+    
+    /* When the menu is active, slide it down and make it visible */
+    .menu-active nav ul {
+        transform: translateY(0); /* Slide down */
+        opacity: 1; /* Fully visible */
+    }
+    
+    
+    /* Ensure smooth height adjustment */
+    .navbar {
+        overflow: hidden;
+    }
+    
+    .menu-active {
+        display: flex !important;
+    }
+    
+    .user-info {
+        display: none;
+    }
+    .logout {
+        display: none;
+    }
 }
