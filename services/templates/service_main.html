@@ -19,7 +19,7 @@
     
         <div id="services-container">
             {% for service in services %}
-            <div class="service-card">
+            <a class="service-card"  href="{% url 'services:service_detail' service_id=service.id %}">
                 <h3 class="h3-text">{{ service.name }}</h3>
                 <p class="category"><strong>Category:</strong> {{ service.get_field_display }}</p>
                 <p><strong>Price per hour:</strong> ${{ service.price_hour }}</p>
@@ -30,21 +30,17 @@
                     <span class="star{% if service.rating >= 4 %} filled{% endif %}">★</span>
                     <span class="star{% if service.rating >= 5 %} filled{% endif %}">★</span>
                 </div>
-                <p><strong>Posted on:</strong> {{ service.date|date:"F j, Y" }}</p>
-
-                <!-- Check if the current user is a company -->
-                {% if request.user.is_company %}
-                    <p><strong>Posted by:</strong> {{ service.company.username }}</p>  <!-- Display as text -->
-                {% else %}
-                <a href="{% url 'company_profile' name=service.company.username %}">Posted by: {{ service.company.username }}</a>  <!-- Display as link -->
-                {% endif %}
-            </div>
+                <p class="posted-date"><strong>Posted on:</strong> {{ service.date|date:"F j, Y" }}</p>
+                <p><strong>Posted by:</strong> {{ service.company.username }}</p>  <!-- Display as text -->
+               
+            </a>
             {% empty %}
             <p>No services available.</p>
             {% endfor %}
         </div>
     </div>
-    {% block extra_js %}
+    
+{% endblock %}
+{% block extra_js %}
     <script src="{% static 'js/services.js' %}"></script>
-    {% endblock %}
 {% endblock %}

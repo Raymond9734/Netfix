@@ -1,0 +1,114 @@
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #E8F5E9;
+    --text-color: #333;
+    --white: #FFFFFF;
+}
+
+
+.content {
+    padding: 20px;
+    text-align: center;
+}
+
+
+button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    max-width: 500px;
+    width: 90%;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.info {
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.info p {
+    margin: 10px 0;
+}
+
+.status {
+    font-weight: bold;
+    color: #FFA000;
+}
+
+.rating {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.star {
+    font-size: 30px;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+    margin: 0 5px;
+}
+
+.star:hover, .star.active {
+    color: #FFD700;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    resize: vertical;
+}
+
+.popup button {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+}

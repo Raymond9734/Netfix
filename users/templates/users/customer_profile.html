@@ -24,28 +24,30 @@
     
     <div class="service-history">
         <h3>Service Request History</h3>
-        {% for service in service_requests %}
-         {% if service.status != 'completed' %}
-            <a class="service-item" href="javascript:void(0);" onclick="openPopup('{{ service.service_field }}', '{{ service.service_name }}', '{{ service.address }}', '{{ service.service_time_hours }}', '{{ service.status }}', '{{ service.id }}')">
-                <h4 class="service-title">{{ service.service_field }}</h4>
-                <h5>Service Name: {{ service.service_name }}</h5>
+        {% for service in services_with_cost %}
+         {% if service.service_request.status != 'completed' %}
+            <a class="service-item" href="javascript:void(0);" onclick="openPopup('{{ service.service_request.service_name }}', '{{ service.service_request.address }}', '{{ service.service_request.service_time_hours }}', '{{ service.service_request.status }}', '{{ service.service_request.id }}')">
+                <h4 class="service-title">{{ service.service_request.service_field }}</h4>
+                <h5>Service Name: {{ service.service_request.service_name }}</h5>
                 <p>Service requested at: {{ service.address }}</p>
-                <p>Service Time: {{ service.service_time_hours }} hours</p>
-                <p>Status: <span class="service-status {% if service.status == 'completed' %}status-completed{% else %}status-in-progress{% endif %}">
-                    {{ service.status }}
+                <p>Service Time: {{ service.service_request.service_time_hours }} hours</p>
+                <p><strong>Total cost: </strong>{{ service.total_cost }}</p>
+                <p>Status: <span class="service-status {% if service.service_request.status == 'completed' %}status-completed{% else %}status-in-progress{% endif %}">
+                    {{ service.service_request.status }}
                 </span></p>
-                <div class="service-date">Requested on: {{ service.requested_at|date:"F d, Y" }}</div>
+                <div class="service-date">Requested on: {{ service.service_request.requested_at|date:"F d, Y" }}</div>
             </a>
          {% else %}
             <div class="service-item">
-                <h4 class="service-title">{{ service.service_field }}</h4>
-                <h5>Service Name: {{ service.service_name }}</h5>
-                <p>Service requested at: {{ service.address }}</p>
-                <p>Service Time: {{ service.service_time_hours }} hours</p>
-                <p>Status: <span class="service-status {% if service.status == 'completed' %}status-completed{% else %}status-in-progress{% endif %}">
-                    {{ service.status }}
+                <h4 class="service-title">{{ service.service_request.service_field }}</h4>
+                <h5>Service Name: {{ service.service_request.service_name }}</h5>
+                <p>Service requested at: {{ service.service_request.address }}</p>
+                <p>Service Time: {{ service.service_request.service_time_hours }} hours</p>
+                <p><strong>Total cost: </strong>${{ service.total_cost }}</p>
+                <p>Status: <span class="service-status {% if service.service_request.status == 'completed' %}status-completed{% else %}status-in-progress{% endif %}">
+                    {{ service.service_request.status }}
                 </span></p>
-                <div class="service-date">Requested on: {{ service.requested_at|date:"F d, Y" }}</div>
+                <div class="service-date">Requested on: {{ service.service_request.requested_at|date:"F d, Y" }}</div>
             </div>
          {% endif %}
         {% empty %}
@@ -65,7 +67,6 @@
         <p><strong>Service requested at:</strong> <span id="popupAddress"></span></p>
         <p><strong>Service Time:</strong> <span id="popupServiceTime"></span> hours</p>
         <p><strong>Status:</strong> <span class="status" id="popupStatus"></span></p>
-        <p><strong>Requested on:</strong> <span id="popupRequestedAt"></span></p>
     </div>
     <div class="rating">
         <span class="star" data-rating="1">★</span>

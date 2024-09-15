@@ -1,10 +1,16 @@
 {% if user.is_authenticated %}
 {% if request.user.is_customer %}
-    <nav>
-        <ul>
+    <nav class="nav-head">
+        <div class="menu-toggle" id="mobile-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+        <ul class="navbar">
             <li><a href="{% url 'main:home' %}">Home</a></li>
             <li><a href="{% url 'services:service_list' %}">Services</a></li>
             <li><a href="{% url 'customer_profile' name=request.user.username %}">Profile</a></li>
+            <li class="signh-out"><a href="{% url 'main:logout' %}" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </a></li>
         </ul>
     </nav>
 {% endif %}

@@ -2,9 +2,16 @@
 <header class="head-1">
     <div class="container">
         <div class="header-content">
+            {% if request.user.is_customer %}
             <a href="{% url 'main:home' %}" class="logo">
                 <i class="fas fa-home mr-2"></i>
                 Home Service Hub</a>
+            {% else %}
+            <div class="logo"></a>
+                <i class="fas fa-home mr-2"></i>
+                Home Service Hub</div>
+            {% endif %}
+                
                 {% include 'partials/navigation.html' %}
            
         </div>

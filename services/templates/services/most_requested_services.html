@@ -15,8 +15,15 @@
                 <div class="service-card">
                     <h3>{{ service.service_name }}</h3>
                     <p class="category">Category: {{ service.service_field }}</p>
+                    <div class="star-rating">
+                        <span class="star{% if service.rating >= 1 %} filled{% endif %}">★</span>
+                        <span class="star{% if service.rating >= 2 %} filled{% endif %}">★</span>
+                        <span class="star{% if service.rating >= 3 %} filled{% endif %}">★</span>
+                        <span class="star{% if service.rating >= 4 %} filled{% endif %}">★</span>
+                        <span class="star{% if service.rating >= 5 %} filled{% endif %}">★</span>
+                    </div>
                     <p><strong>Company: </strong>{{ service.company__username }}</p>
-
+                   
                 </div>
             {% endfor %}
         </div>

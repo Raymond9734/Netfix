@@ -1,15 +1,67 @@
-{% extends 'main/base.html' %}
-{% block title %}
-    {{ service.name }}
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/services_display.css' %}">
+<link rel="stylesheet" href="{% static 'css/single_service.css' %}">
 {% endblock %}
+
+
 {% block content %}
-    <div class='service_info_header'>
-        <h1>{{service.name}} -- {{service.price_hour}}€/hour</h1>
-        <h5>by <a href="/company/{{service.company.user}}">{{service.company.user}}</a></h5>
+{% include 'partials/service_subHeader.html' %}
+    <div class="container4">
+        <h1 class="typing">{{ service.name }}</h1>
+        <div class="service-details">
+            <div class="category typing"><span class="label">Category:</span> <span id="category"></span></div>
+            <div class="price typing"><span class="label">Price per hour:</span> <span id="price"></span></div>
+            <div class="rating typing"><span class="label">Rating:</span> <span id="rating"></span></div>
+            <div class="date typing"><span class="label">Posted on:</span> <span id="date"></span></div>
+            {% if request.user.is_customer %}
+            <a href="{% url 'company_profile' name=service.company.username %}">Posted by: {{ service.company.username }}</a>  
+            {% else %}
+            <p>Posted by: {{ service.company.username }}</p>  
+            {% endif %}
+        </div>
+        <div>
+            {{ service.description }}
+        </div>
     </div>
-    <h3>{{service.field}}</h3>
-    <p style="text-align: left;">{{service.description}}</p>
-    {% if request.user.is_customer %}
-        <a href="/services/{{service.id}}/request_service/" class="like_button">Request Service</a>
-    {% endif %}
+{% endblock %}
+{% block extra_js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoryEl = document.getElementById('category');
+            const priceEl = document.getElementById('price');
+            const ratingEl = document.getElementById('rating');
+            const dateEl = document.getElementById('date');
+
+            const serviceDetails = {
+                category: '{{ service.field }}',
+                price: '${{ service.price_hour }}',
+                rating: '{{ service.rating }}',
+                date: '{{ service.date|date:"F j, Y" }}'
+            };
+
+            function typeWriter(element, text, i = 0) {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    setTimeout(() => typeWriter(element, text, i + 1), 100);
+                }
+            }
+            function ratingtypeWriter(element, text, i = 0) {
+                let num = Number(text)
+                if (num === 0) {
+                    element.textContent = 0
+                }
+                if (i < num) {
+                    element.textContent += '★'
+                    setTimeout(() => ratingtypeWriter(element, text, i + 1), 100);
+                }
+            }
+
+            setTimeout(() => typeWriter(categoryEl, serviceDetails.category), 3500);
+            setTimeout(() => typeWriter(priceEl, serviceDetails.price), 5000);
+            setTimeout(() => ratingtypeWriter(ratingEl, serviceDetails.rating), 6500);
+            setTimeout(() => typeWriter(dateEl, serviceDetails.date), 8000);
+        });
+    </script>
 {% endblock %}

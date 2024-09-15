@@ -4,6 +4,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh; /* Full viewport height to center vertically */
+    padding: 0 20px; /* Added padding to ensure some spacing on smaller screens */
 }
 
 .logout-container {
@@ -11,8 +12,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 70vh; /* Slightly less than full height */
-    width: 600px; /* Fixed width */
+    height: auto; /* Allow height to adjust based on content */
+    max-width: 90%; /* Set a max-width to prevent overflow on small screens */
     background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -20,17 +21,16 @@
     text-align: center;
 }
 
-
 .logout-text {
     font-family: 'Georgia', 'Times New Roman', Times, serif;
-    font-size: 50px;
+    font-size: 2.5rem; /* Responsive font size */
     color: #4CAF50;
     margin-bottom: 20px;
 }
 
 .logout-home-link {
     text-decoration: none;
-    font-size: 20px;
+    font-size: 1rem; /* Responsive font size */
     color: #fff;
     background-color: #4CAF50;
     padding: 10px 20px;
@@ -40,4 +40,32 @@
 
 .logout-home-link:hover {
     background-color: #388E3C;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .logout-text {
+        font-size: 2rem; /* Smaller font size for smaller screens */
+    }
+
+    .logout-home-link {
+        font-size: 0.9rem; /* Adjust font size for smaller screens */
+        padding: 8px 16px; /* Adjust padding for smaller screens */
+    }
+
+    .logout-container {
+        width: 100%; /* Full width on smaller screens */
+        max-width: 100%; /* Ensure it doesn't exceed viewport width */
+    }
+}
+
+@media (max-width: 480px) {
+    .logout-text {
+        font-size: 1.5rem; /* Further reduced font size for very small screens */
+    }
+
+    .logout-home-link {
+        font-size: 0.8rem; /* Further reduced font size for very small screens */
+        padding: 6px 12px; /* Further reduced padding for very small screens */
+    }
 }

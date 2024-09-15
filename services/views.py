@@ -138,10 +138,10 @@ def most_requested_services(request):
     # Group by service_name and count how many times each service_name has been requested
     services = (
         RequestedService.objects.values(
-            "service_name", "service_field", "company__username"
+            "service_name", "service_field", "company__username","rating"
         )
         .annotate(request_count=Count("service_name"))
-        .order_by("-request_count")[:10]
+        .order_by("-request_count")[:5]
     )
 
     # Convert QuerySet to a list of dictionaries
@@ -208,3 +208,11 @@ def mark_service_complete(request, service_id):
     service.save()
 
     return JsonResponse({"success": True})
+
+
+def service_detail(request, service_id):
+    # Retrieve the specific service by its ID
+    service = get_object_or_404(Service, id=service_id)
+
+    # Pass the service details to the template
+    return render(request, "services/single_service.html", {"service": service})

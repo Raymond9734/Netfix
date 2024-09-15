@@ -139,4 +139,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = "/static/"
-LOGIN_REDIRECT_URL = '/' 
+LOGIN_REDIRECT_URL = "/"
+ALLOWED_HOSTS = ["192.168.100.2", "localhost", "127.0.0.1"]
