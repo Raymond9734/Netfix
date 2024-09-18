@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.db.models import Count
-from users.models import Company, Customer, User
+from users.models import Company
 from django.contrib.auth.decorators import login_required
 from .models import Service, RequestedService
 from .forms import CreateNewService, RequestServiceForm
@@ -9,7 +9,7 @@ from django.core.serializers import serialize
 import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
@@ -26,27 +26,31 @@ def create(request):
     if request.method == "POST":
         # Get choices based on the company's field_of_work
         if company.field_of_work == "All in One":
-            # All choices available
             choices = Service._meta.get_field("field").choices
         else:
-            # Only the registered field of work is available
             choices = [(company.field_of_work, company.field_of_work)]
 
         form = CreateNewService(request.POST, choices=choices)
         if form.is_valid():
-            # Save the new service
-            Service.objects.create(
-                company=company,
-                name=form.cleaned_data["name"],
-                description=form.cleaned_data["description"],
-                price_hour=form.cleaned_data["price_hour"],
-                field=form.cleaned_data["field"],
-            )
-            return redirect(
-                reverse("company_profile", kwargs={"name": company.username})
-            )
+            name = form.cleaned_data["name"]
+            # Check if a Service with the same name already exists for the company
+            if Service.objects.filter(company=company, name=name).exists():
+                form.add_error(
+                    "name", "The service name you entered already exists for your company."
+                )
+            else:
+                # Save the new service
+                Service.objects.create(
+                    company=company,
+                    name=name,
+                    description=form.cleaned_data["description"],
+                    price_hour=form.cleaned_data["price_hour"],
+                    field=form.cleaned_data["field"],
+                )
+                return redirect(
+                    reverse("company_profile", kwargs={"name": company.username})
+                )
     else:
-        # Set choices based on the company's field_of_work
         if company.field_of_work == "All in One":
             choices = Service._meta.get_field("field").choices
         else:
@@ -71,7 +75,9 @@ def request_service(request, company_name, service_id):
             requested_service.service_field = service.field
             requested_service.requested_by = request.user
             requested_service.save()
-            return redirect("main:home")
+            return redirect(
+                reverse("customer_profile", kwargs={"name": request.user.username})
+            )
     else:
         form = RequestServiceForm()
 
