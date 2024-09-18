@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth import logout as django_logout
-
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from services.models import Service
 
 
-@login_required
 def home(request):
     # Query the Service model to get all services
     services = Service.objects.all()
@@ -21,6 +20,7 @@ def home(request):
     return render(request, "main/home.html", context)
 
 
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def logout(request):
     django_logout(request)
     return render(request, "main/logout.html")
