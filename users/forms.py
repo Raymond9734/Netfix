@@ -16,15 +16,6 @@ def validate_email(value):
     if User.objects.filter(email=value).exists():
         raise ValidationError(value + " is already taken.")
 
-
-class CustomerSignUpForm(UserCreationForm):
-    pass
-
-
-class CompanySignUpForm(UserCreationForm):
-    pass
-
-
 class UserLoginForm(forms.Form):
     username = forms.CharField(
         required=False, widget=forms.TextInput(attrs={"placeholder": "Enter Username"})
