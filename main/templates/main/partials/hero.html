@@ -3,6 +3,6 @@
     <div class="container">
         <h1>Welcome to Our Web App</h1>
         <p>Discover amazing services tailored to your needs</p>
-        <a href="#" class="cta-button">Get Started</a>
+        <a href="{% if not user.is_authenticated %}{% url 'users:choose_registration' %}{% else %}#ser-vices{% endif %}" class="cta-button">Get Started</a>
     </div>
 </section>

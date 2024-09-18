@@ -10,10 +10,6 @@ from .models import Company, Customer, User
 User = get_user_model()  # Get the custom User model
 
 
-def register(request):
-    return render(request, "users/register.html")
-
-
 def login_view(request):
     if request.method == "POST":
         form = UserLoginForm(request.POST)

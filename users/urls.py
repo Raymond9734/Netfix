@@ -8,7 +8,6 @@ from . import views as v
 app_name = "users"
 
 urlpatterns = [
-    path("", v.register, name="register"),
     path("company_registration/", v.register_company, name="register_company"),
     path("customer_registration/", v.register_customer, name="register_customer"),
     # path("login/", v.LoginUserView, name="login_user"),

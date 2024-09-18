@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.db.models import Count
 from users.models import Company, Customer, User
 from django.contrib.auth.decorators import login_required
@@ -9,17 +9,16 @@ from django.core.serializers import serialize
 import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from django.contrib import messages
-
 from django.views.decorators.csrf import csrf_exempt
 
 
-@login_required
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def index(request, id):
     service = Service.objects.get(id=id)
     return render(request, "services/single_service.html", {"service": service})
 
 
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def create(request):
     # Get the current company
     company = request.user.company
@@ -58,15 +57,7 @@ def create(request):
     return render(request, "services/create_service.html", {"form": form})
 
 
-def service_field(request, field):
-    # search for the service present in the url
-    field = field.replace("-", " ").title()
-    services = Service.objects.filter(field=field)
-    return render(
-        request, "services/field.html", {"services": services, "field": field}
-    )
-
-
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def request_service(request, company_name, service_id):
     company = get_object_or_404(Company, username=company_name)
     service = get_object_or_404(Service, id=service_id)
@@ -91,12 +82,14 @@ def request_service(request, company_name, service_id):
     )
 
 
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def services_list(request):
     # Fetch all services from the database
     services = Service.objects.all().order_by("-date")  # Newest first by default
     return render(request, "service_main.html", {"services": services})
 
 
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def service_by_category(request):
     services = Service.objects.all().select_related("company")
     services_json = json.loads(serialize("json", services))
@@ -134,11 +127,12 @@ def service_by_category(request):
     return render(request, "services/service_by_category.html", context)
 
 
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def most_requested_services(request):
     # Group by service_name and count how many times each service_name has been requested
     services = (
         RequestedService.objects.values(
-            "service_name", "service_field", "company__username","rating"
+            "service_name", "service_field", "company__username", "rating"
         )
         .annotate(request_count=Count("service_name"))
         .order_by("-request_count")[:5]
@@ -158,7 +152,7 @@ def most_requested_services(request):
 
 
 @require_POST
-@login_required
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def submit_review(request, service_id):
     if request.method == "POST":
         try:
@@ -190,7 +184,7 @@ def submit_review(request, service_id):
 
 
 @require_POST
-@login_required
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def mark_service_complete(request, service_id):
     """
     Marks a requested service as completed.
@@ -210,6 +204,7 @@ def mark_service_complete(request, service_id):
     return JsonResponse({"success": True})
 
 
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def service_detail(request, service_id):
     # Retrieve the specific service by its ID
     service = get_object_or_404(Service, id=service_id)
