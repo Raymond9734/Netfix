@@ -3,12 +3,11 @@ from django.utils import timezone
 from users.models import User, Company, Customer
 from services.models import RequestedService, Service
 from decimal import Decimal, ROUND_HALF_UP
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 
 
-def home(request):
-    return render(request, "users/home.html", {"user": request.user})
-
-
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def customer_profile(request, name):
     # Get the User object or return a 404 if not found
     user = get_object_or_404(User, username=name)
@@ -63,6 +62,7 @@ def customer_profile(request, name):
     )
 
 
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def company_profile(request, name):
     # Fetch the company user
     user = get_object_or_404(User, username=name)
