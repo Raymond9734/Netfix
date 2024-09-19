@@ -1,31 +1,40 @@
 {% if user.is_authenticated %}
-{% if request.user.is_customer %}
-    <nav class="nav-head">
-        <div class="menu-toggle" id="mobile-menu">
-            <i class="fas fa-bars"></i>
-        </div>
-        <ul class="navbar">
-            <li><a href="{% url 'main:home' %}">Home</a></li>
-            <li><a href="{% url 'services:service_list' %}">Services</a></li>
-            <li><a href="{% url 'customer_profile' name=request.user.username %}">Profile</a></li>
-            <li class="signh-out"><a href="{% url 'main:logout' %}" title="Logout">
+    {% if request.user.is_customer %}
+        <nav class="nav-head">
+            <div class="menu-toggle" id="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="navbar">
+                <li><a href="{% url 'main:home' %}">Home</a></li>
+                <li><a href="{% url 'services:service_list' %}">Services</a></li>
+                <li><a href="{% url 'customer_profile' name=request.user.username %}">Profile</a></li>
+                <li class="sign-out"><a href="{% url 'main:logout' %}" title="Logout"></a>
+                    <i class="fas fa-sign-out-alt"></i>
+                </a></li>
+            </ul>
+            
+        </nav>
+        
+        <a class="user-info" href="{% url 'customer_profile' name=request.user.username %}"> 
+            <p>Welcome, {{ request.user.username }}!</p>
+        </a>
+        <div class="logout">
+            <a href="{% url 'main:logout' %}" title="Logout">
                 <i class="fas fa-sign-out-alt"></i>
-            </a></li>
-        </ul>
-    </nav>
-{% endif %}
-
-<a class="user-info" href="{% url 'customer_profile' name=request.user.username %}"> 
-    <p>Welcome, {{ request.user.username }}!</p>
-</a>
- <!-- Logout Icon -->
- <div class="logout">
-    <a href="{% url 'main:logout' %}" title="Logout">
-        <i class="fas fa-sign-out-alt"></i>
-    </a>
-</div>
+            </a>
+        </div>
+    {% elif request.user.is_company %}
+        <a class="user-info1" href="{% url 'company_profile' name=request.user.username %}"> 
+            <p>Welcome, {{ request.user.username }}!</p>
+        </a>
+        <div class="logout1">
+            <a href="{% url 'main:logout' %}" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+    {% endif %}
 {% else %}
-<div class="user-login">
-    <a href="{% url 'users:choose_registration' %}" >LOGIN</a>
-</div>
+    <div class="user-login">
+        <a href="{% url 'users:choose_registration' %}">LOGIN</a>
+    </div>
 {% endif %}
