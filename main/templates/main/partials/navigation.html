@@ -15,9 +15,9 @@
     </nav>
 {% endif %}
 
-<div class="user-info">
+<a class="user-info" href="{% url 'customer_profile' name=request.user.username %}"> 
     <p>Welcome, {{ request.user.username }}!</p>
-</div>
+</a>
  <!-- Logout Icon -->
  <div class="logout">
     <a href="{% url 'main:logout' %}" title="Logout">
