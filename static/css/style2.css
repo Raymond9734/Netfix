@@ -2,7 +2,7 @@
 
 .full-height {
     min-height: 100vh;
-    background-color: #e6f4ea; /* Tailwind's bg-green-50 */
+    background-color: hsl(0, 2%, 90%); 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,13 +16,13 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tailwind's shadow-xl */
     border-radius: 0.75rem; /* Tailwind's rounded-xl */
     text-align: center;
-    margin-top: 5rem; /* Tailwind's mt-20 */
+    margin-top: 10rem; /* Tailwind's mt-20 */
 }
 
 .title {
     font-size: 1.875rem; /* Tailwind's text-3xl */
     font-weight: 700; /* Tailwind's font-bold */
-    color: #2f855a; /* Tailwind's text-green-700 */
+    color: #008000; /* Tailwind's text-green-700 */
     margin-bottom: 2.5rem; /* Tailwind's mb-10 */
 }
 
@@ -33,7 +33,7 @@
     padding: 1rem 2rem; /* Tailwind's py-4 px-8 */
     margin-bottom: 1rem; /* Tailwind's mb-4 */
     color: #ffffff; /* Tailwind's text-white */
-    background-color: #2f855a; /* Tailwind's bg-green-600 */
+    background-color: #008000; /* Tailwind's bg-green-600 */
     border-radius: 0.75rem; /* Tailwind's rounded-xl */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tailwind's shadow-lg */
     transition: background-color 0.3s, transform 0.3s;
