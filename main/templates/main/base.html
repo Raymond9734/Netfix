@@ -5,14 +5,14 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Home Service Hub{% endblock %}</title>
+    <title>{% block title %}Netfix Services{% endblock %}</title>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <link href="{% static 'css/footer.css' %}" rel="stylesheet">
     {% block extra_css %}
     {% endblock %}
+    <link rel="icon" type="image/png" href="{% static 'netfix_logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/home_page.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script> -->
 </head>
 <body class="min-h-screen">
     {% include 'partials/header.html' %}
@@ -20,7 +20,9 @@
         {% block content %}{% endblock %}
     </div>
     {% include 'partials/home_footer.html' %}
+    {% if user.is_authenticated and request.user.is_customer %}
     <script src="{% static 'js/scripts.js' %}"></script>
+    {% endif %}
     {% block extra_js %}
     {% endblock %}
 </body>
