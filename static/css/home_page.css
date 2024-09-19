@@ -14,6 +14,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+
 }
 
 /* Header styles */
@@ -32,14 +33,6 @@ body {
     align-items: center;
     padding: 15px 0;
 }
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #4CAF50;
-    text-decoration: none;
-}
-
 
 nav ul {
     display: flex;
@@ -62,7 +55,7 @@ nav ul li a:hover {
 
 /* Hero section styles */
 .hero {
-    background-color: #4CAF50;
+    background-color: #008000;
     color: #fff;
     padding: 100px 0 50px;
     text-align: center;
@@ -253,6 +246,10 @@ footer {
     text-align: center;
     margin: 20px 0;
 }
+.user-info1 {
+    font-size: 1.1rem;
+    color: black;
+}
 
 .user-info p {
     font-size: 18px;
@@ -263,6 +260,13 @@ footer {
 .logout {
     text-align: right;
     margin: 20px 0;
+}
+
+.logout1 a {
+    color: #4CAF50; /* Green color for the icon */
+    font-size: 24px;
+    text-decoration: none;
+    padding: 10px;
 }
 
 .logout a {
@@ -285,7 +289,7 @@ footer {
     color: white;
     cursor: pointer;
 }
-.signh-out {
+.sign-out {
     display: none;
 }
 /* Responsive styles */
@@ -331,7 +335,7 @@ footer {
     .nav-head ul li {
         margin: 10px 0;
     }
-    .signh-out{
+    .sign-out{
         display: block;
     }
     .menu-toggle {
