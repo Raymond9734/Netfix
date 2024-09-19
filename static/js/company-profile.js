@@ -1,17 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const manageServicesBtn = document.getElementById('manageServices');
-    const companyServices = document.getElementById('companyServices');
-  
-    
-
-    manageServicesBtn.addEventListener('click', function() {
-        companyServices.readOnly = !companyServices.readOnly;
-        this.textContent = companyServices.readOnly ? 'Edit Services' : 'Save Services';
-    });
-
-  
-   
-  
+ 
     // Add smooth scroll effect
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
