@@ -36,10 +36,7 @@ if not SECRET_KEY:
     raise ValueError("The DJANGO_SECRET_KEY environment variable is not set")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+DEBUG = os.getenv("DEBUG", "True") == "True"
 AUTH_USER_MODEL = "users.User"
 
 # Application definition
@@ -140,4 +137,4 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 LOGIN_REDIRECT_URL = "/register/chooseregistration/"
-ALLOWED_HOSTS = ["192.168.100.2", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
