@@ -36,11 +36,7 @@ echo "Installing dependencies..."
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# Step 4: Apply migrations
-echo "Applying migrations..."
-python3 manage.py migrate
-
-# Step 5: Create a .env file (if required)
+# Step 4: Create a .env file (if required)
 if [ ! -f ".env" ]; then
   echo "Creating .env file..."
   touch .env
@@ -55,8 +51,12 @@ if [ ! -f ".env" ]; then
 
   echo "DEBUG=True" >> .env
   echo "ALLOWED_HOSTS=127.0.0.1,localhost" >> .env
-#   echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
+  echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
 fi
+
+# Step 5: Apply migrations
+echo "Applying migrations..."
+python3 manage.py migrate
 
 # Step 6: Start the Django development server
 echo "Starting the Django development server..."
