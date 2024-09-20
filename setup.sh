@@ -25,7 +25,7 @@ python3 manage.py migrate
 if [ ! -f ".env" ]; then
   echo "Creating .env file..."
   touch .env
-  echo "SECRET_KEY=$(openssl rand -base64 32)" >> .env
+  echo "DJANGO_SECRET_KEY=$(openssl rand -base64 32)" >> .env
   echo "DEBUG=True" >> .env
   echo "ALLOWED_HOSTS=127.0.0.1,localhost" >> .env
 #   echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
