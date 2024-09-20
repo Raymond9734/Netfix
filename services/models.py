@@ -34,6 +34,12 @@ class Service(models.Model):
     field = models.CharField(max_length=30, blank=False, null=False, choices=choices)
     date = models.DateTimeField(auto_now=True, null=False)
 
+    class Meta:
+        unique_together = (
+            "name",
+            "company",
+        )  # Ensure name and company together are unique
+
     def __str__(self):
         return self.name
 
@@ -72,8 +78,10 @@ class RequestedService(models.Model):
         super().save(*args, **kwargs)  # Save the requested service first
 
         # Find the corresponding service
-        service = Service.objects.filter(name=self.service_name, company=self.company).first()
-        
+        service = Service.objects.filter(
+            name=self.service_name, company=self.company
+        ).first()
+
         if service is None:
             return  # Or handle the case where the service does not exist
 

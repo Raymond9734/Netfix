@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.getElementById('mobile-menu');
     const navbar = document.querySelector('.navbar');
     const icon = menuToggle.querySelector('i'); // Icon inside the toggle
-   console.log(menuToggle)
     menuToggle.addEventListener('click', function() {
         // Toggle the menu visibility
         if (navbar.classList.contains('menu-active')) {

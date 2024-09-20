@@ -16,7 +16,9 @@ def customer_profile(request, name):
     customer = get_object_or_404(Customer, user=user)
 
     # Get service requests for the logged-in user
-    service_requests = RequestedService.objects.filter(requested_by=request.user)
+    service_requests = RequestedService.objects.filter(
+        requested_by=request.user
+    ).order_by("-requested_at")
 
     # Initialize a list to store service requests with calculated costs
     services_with_cost = []

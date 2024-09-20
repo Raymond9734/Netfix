@@ -34,7 +34,7 @@ body {
     color: #4CAF50;
 }
 #chart-container {
-    margin-top: 2rem;
+    margin: 2rem auto;
     height: 400px;
 }
 @media (max-width: 768px) {
@@ -47,5 +47,9 @@ body {
     }
     #services-container {
         grid-template-columns: 1fr;
+    }
+    #chart-container {
+        display: none;
+
     }
 }

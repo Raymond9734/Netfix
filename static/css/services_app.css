@@ -86,6 +86,37 @@ select {
     font-size: 0.9em;
     margin-top: 5px;
 }
+/* Style for the alert container */
+.alert {
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text color */
+    border: 1px solid #f5c6cb; /* Light red border */
+    font-family: Arial, sans-serif;
+}
+
+/* Style for the strong element inside the alert */
+.alert strong {
+    font-weight: bold;
+}
+
+/* Style for the list inside the alert */
+.alert ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+/* Style for list items */
+.alert li {
+    margin-bottom: 5px;
+}
+
+/* Optional: Add some space between alert and other elements */
+.alert + .form-group {
+    margin-top: 20px;
+}
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
