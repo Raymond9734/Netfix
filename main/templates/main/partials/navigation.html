@@ -8,7 +8,7 @@
                 <li><a href="{% url 'main:home' %}">Home</a></li>
                 <li><a href="{% url 'services:service_list' %}">Services</a></li>
                 <li><a href="{% url 'customer_profile' name=request.user.username %}">Profile</a></li>
-                <li class="sign-out"><a href="{% url 'main:logout' %}" title="Logout"></a>
+                <li class="sign-out"><a href="{% url 'main:logout' %}" title="Logout">
                     <i class="fas fa-sign-out-alt"></i>
                 </a></li>
             </ul>
