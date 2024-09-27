@@ -84,3 +84,8 @@ def company_profile(request, name):
         "users/profile.html",
         {"user": user, "services": services, "reviews": reviews},
     )
+
+
+def forbidden_view(request):
+    # Render a custom forbidden page template
+    return render(request, "403.html")
