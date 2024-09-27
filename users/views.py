@@ -11,6 +11,9 @@ User = get_user_model()  # Get the custom User model
 
 
 def login_view(request):
+    if request.user.is_authenticated:
+        # Redirect the user to the homepage if they are already logged in
+        return redirect("main:home")
     if request.method == "POST":
         form = UserLoginForm(request.POST)
         if form.is_valid():
@@ -55,6 +58,9 @@ def login_view(request):
 
 
 def register_company(request):
+    if request.user.is_authenticated:
+        # Redirect the user to the homepage if they are already logged in
+        return redirect("main:home")
     if request.method == "POST":
         form = CompanyRegistrationForm(request.POST)
         if form.is_valid():
@@ -100,10 +106,16 @@ def register_company(request):
 
 
 def choose_registration(request):
+    if request.user.is_authenticated:
+        # Redirect the user to the homepage if they are already logged in
+        return redirect("main:home")
     return render(request, "user_choice.html")
 
 
 def register_customer(request):
+    if request.user.is_authenticated:
+        # Redirect the user to the homepage if they are already logged in
+        return redirect("main:home")
     if request.method == "POST":
         form = CustomerRegistrationForm(request.POST)
 
