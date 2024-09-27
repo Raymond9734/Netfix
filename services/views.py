@@ -9,7 +9,7 @@ from django.core.serializers import serialize
 import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from django.contrib import messages
+from django.http import HttpResponseNotAllowed
 
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
@@ -20,6 +20,8 @@ def index(request, id):
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def create(request):
+    if not request.user.is_authenticated or not request.user.is_company:
+        return redirect("forbidden")
     # Get the current company
     company = request.user.company
 
@@ -36,7 +38,8 @@ def create(request):
             # Check if a Service with the same name already exists for the company
             if Service.objects.filter(company=company, name=name).exists():
                 form.add_error(
-                    "name", "The service name you entered already exists for your company."
+                    "name",
+                    "The service name you entered already exists for your company.",
                 )
             else:
                 # Save the new service
@@ -63,6 +66,8 @@ def create(request):
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def request_service(request, company_name, service_id):
+    if not request.user.is_authenticated or not request.user.is_customer:
+        return redirect("forbidden")
     company = get_object_or_404(Company, username=company_name)
     service = get_object_or_404(Service, id=service_id)
 
@@ -160,6 +165,10 @@ def most_requested_services(request):
 @require_POST
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def submit_review(request, service_id):
+    if not request.user.is_authenticated or not request.user.is_customer:
+        return redirect("forbidden")
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
     if request.method == "POST":
         try:
             data = json.loads(request.body)
@@ -192,9 +201,13 @@ def submit_review(request, service_id):
 @require_POST
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def mark_service_complete(request, service_id):
+    if not request.user.is_authenticated or not request.user.is_customer:
+        return redirect("forbidden")
     """
     Marks a requested service as completed.
     """
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
     service = get_object_or_404(
         RequestedService, id=service_id, requested_by=request.user
     )
