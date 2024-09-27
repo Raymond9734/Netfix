@@ -8,24 +8,42 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-# Step 1: Create a virtual environment
+# Step 1: Check if python3-venv is installed (for Linux systems)
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    if ! python3 -m venv &> /dev/null; then
+        echo "python3-venv is not installed. Installing it now..."
+        if command -v apt &> /dev/null; then
+            sudo apt update
+            sudo apt install python3-venv -y
+        else
+            echo "Error: Unsupported package manager. Please install python3-venv manually."
+            exit 1
+        fi
+    fi
+fi
+
+# Step 2: Create a virtual environment
 if [ ! -d "my_env-Netfix" ]; then
     echo "Creating virtual environment..."
     python3 -m venv my_env-Netfix
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to create a virtual environment. Ensure python3-venv is installed."
+        exit 1
+    fi
 fi
 
-# Step 2: Activate the virtual environment (handles Unix/macOS and Windows)
+# Step 3: Activate the virtual environment (handles Unix/macOS and Windows)
 echo "Activating virtual environment..."
 if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "darwin"* ]]; then
     source my_env-Netfix/bin/activate
 elif [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
     source my_env-Netfix/Scripts/activate
 else
-    echo "Error: Unsupported OS for virtual environment activation"
+    echo "Error: Unsupported OS for virtual environment activation."
     exit 1
 fi
 
-# Step 3: Install the required dependencies
+# Step 4: Install the required dependencies
 if [ ! -f "requirements.txt" ]; then
     echo "Error: requirements.txt not found. Please ensure it exists."
     deactivate
@@ -36,7 +54,7 @@ echo "Installing dependencies..."
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# Step 4: Create a .env file (if required)
+# Step 5: Create a .env file (if required)
 if [ ! -f ".env" ]; then
   echo "Creating .env file..."
   touch .env
@@ -51,14 +69,14 @@ if [ ! -f ".env" ]; then
 
   echo "DEBUG=True" >> .env
   echo "ALLOWED_HOSTS=127.0.0.1,localhost" >> .env
-  echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
+  # echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
 fi
 
-# Step 5: Apply migrations
+# Step 6: Apply migrations
 echo "Applying migrations..."
 python3 manage.py migrate
 
-# Step 6: Start the Django development server
+# Step 7: Start the Django development server
 echo "Starting the Django development server..."
 python3 manage.py runserver
 
