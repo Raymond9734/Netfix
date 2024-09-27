@@ -16,4 +16,5 @@ urlpatterns = [
         mark_service_complete,
         name="mark-service-complete",
     ),
+    path("forbidden/", v.forbidden_view, name="forbidden"),
 ]
