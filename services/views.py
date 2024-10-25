@@ -36,7 +36,8 @@ def create(request):
             # Check if a Service with the same name already exists for the company
             if Service.objects.filter(company=company, name=name).exists():
                 form.add_error(
-                    "name", "The service name you entered already exists for your company."
+                    "name",
+                    "The service name you entered already exists for your company.",
                 )
             else:
                 # Save the new service
@@ -135,17 +136,15 @@ def service_by_category(request):
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def most_requested_services(request):
-    # Group by service_name and count how many times each service_name has been requested
+    # Group by service_name only and count how many times each service_name was requested
     services = (
-        RequestedService.objects.values(
-            "service_name", "service_field", "company__username", "rating"
-        )
-        .annotate(request_count=Count("service_name"))
-        .order_by("-request_count")[:5]
+        RequestedService.objects.values("service_name")
+        .annotate(request_count=Count("id"))  # Count occurrences of each service_name
+        .order_by("-request_count")[:5]  # Get top 5 most requested services
     )
 
     # Convert QuerySet to a list of dictionaries
-    services_list = list(services)  # Convert QuerySet to a list
+    services_list = list(services)
 
     # Render the template with the services data
     return render(
