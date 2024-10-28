@@ -5,82 +5,114 @@ from services.models import RequestedService, Service
 from decimal import Decimal, ROUND_HALF_UP
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.db.models import Prefetch
 
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def customer_profile(request, name):
-    # Get the User object or return a 404 if not found
-    user = get_object_or_404(User, username=name)
+    """
+    Display customer profile with their service request history and calculated costs.
+    
+    Args:
+        request: The HTTP request object
+        name: Username of the customer
+        
+    Returns:
+        Rendered customer profile template with user details and service history
+    """
+    # Get the User and related Customer profile in a single query
+    user = get_object_or_404(User.objects.select_related('customer_profile'), username=name)
+    customer = user.customer_profile
 
-    # Get the Customer instance related to this User
-    customer = get_object_or_404(Customer, user=user)
-
-    # Get service requests for the logged-in user
+    # Get service requests with company and service info prefetched to reduce queries
     service_requests = RequestedService.objects.filter(
         requested_by=request.user
+    ).select_related(
+        'company'
+    ).prefetch_related(
+        Prefetch(
+            'company__service_set',
+            queryset=Service.objects.only('name', 'price_hour', 'company'),
+            to_attr='services'
+        )
     ).order_by("-requested_at")
 
-    # Initialize a list to store service requests with calculated costs
+    # Calculate costs and prepare data for template
     services_with_cost = []
-
-    # Loop over each service request to calculate total cost
     for request_service in service_requests:
-        # Get the corresponding Service object
-        service = get_object_or_404(
-            Service, name=request_service.service_name, company=request_service.company
+        # Find matching service from prefetched data
+        service = next(
+            (s for s in request_service.company.services 
+             if s.name == request_service.service_name),
+            None
         )
+        
+        if service:
+            # Calculate and round total cost
+            total_cost = (service.price_hour * 
+                         Decimal(request_service.service_time_hours)
+                        ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+            
+            services_with_cost.append({
+                "service_request": request_service,
+                "total_cost": total_cost
+            })
 
-        # Calculate the total cost (price per hour * service time in hours)
-        total_cost = service.price_hour * Decimal(request_service.service_time_hours)
-
-        # Round the total cost to 2 decimal places
-        total_cost = total_cost.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-        # Append the request and its total cost to the list
-        services_with_cost.append(
-            {"service_request": request_service, "total_cost": total_cost}
-        )
-
-    # Calculate the current age of the customer
+    # Calculate customer's current age
     today = timezone.now().date()
     age = (
         today.year
         - customer.date_of_birth.year
-        - (
-            (today.month, today.day)
-            < (customer.date_of_birth.month, customer.date_of_birth.day)
-        )
+        - ((today.month, today.day) < 
+           (customer.date_of_birth.month, customer.date_of_birth.day))
     )
 
-    # Render the profile template with the user, customer details, service requests, and total costs
     return render(
         request,
         "users/customer_profile.html",
         {
             "user": user,
             "customer": customer,
-            "services_with_cost": services_with_cost,  # Pass services with cost to the template
-            "age": age,  # Pass the age to the template
+            "services_with_cost": services_with_cost,
+            "age": age,
         },
     )
 
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def company_profile(request, name):
-    # Fetch the company user
-    user = get_object_or_404(User, username=name)
+    """
+    Display company profile with their services and customer reviews.
+    
+    Args:
+        request: The HTTP request object
+        name: Username of the company
+        
+    Returns:
+        Rendered company profile template with services and reviews
+    """
+    # Get company user with related company profile
+    user = get_object_or_404(User.objects.select_related('company_profile'), 
+                            username=name)
+    company = user.company_profile
 
-    # Fetch the company's services
-    services = Service.objects.filter(company=Company.objects.get(user=user)).order_by(
-        "-date"
-    )
+    # Get company services and reviews in optimized queries
+    services = Service.objects.filter(
+        company=company
+    ).order_by("-date")
 
-    # Fetch customer reviews for the company
-    reviews = RequestedService.objects.filter(company__user=user).order_by(
-        "-requested_at"
-    )
+    reviews = RequestedService.objects.filter(
+        company=company
+    ).select_related(
+        'requested_by'
+    ).order_by("-requested_at")
 
     return render(
         request,
         "users/profile.html",
-        {"user": user, "services": services, "reviews": reviews},
+        {
+            "user": user,
+            "services": services,
+            "reviews": reviews
+        },
     )
