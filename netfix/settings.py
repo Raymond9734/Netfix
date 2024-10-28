@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -20,10 +19,11 @@ load_dotenv()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+# Directory for static files
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -36,24 +36,32 @@ if not SECRET_KEY:
     raise ValueError("The DJANGO_SECRET_KEY environment variable is not set")
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# Get DEBUG value from environment, defaults to "True"
 DEBUG = os.getenv("DEBUG", "True") == "True"
+
+# Custom user model
 AUTH_USER_MODEL = "users.User"
 
 # Application definition
+# Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# List of installed Django apps
 INSTALLED_APPS = [
+    # Django built-in apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # apps created
+    # Custom project apps
     "main",
     "services",
     "users",
 ]
 
+# Middleware configuration
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -64,12 +72,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# Root URL configuration
 ROOT_URLCONF = "netfix.urls"
 
+# Template configuration
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
+            # Template directories
             os.path.join(BASE_DIR, "main/templates/main"),
             os.path.join(BASE_DIR, "templates"),
         ],
@@ -85,12 +96,11 @@ TEMPLATES = [
     },
 ]
 
+# WSGI application path
 WSGI_APPLICATION = "netfix.wsgi.application"
 
-
-# Database
+# Database configuration
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -98,10 +108,7 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
-
+# Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -117,24 +124,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.11/topics/i18n/
-
+# Internationalization settings
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
+USE_I18N = True  # Internationalization
+USE_L10N = True  # Localization
+USE_TZ = True    # Timezone support
 
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
-
+# Static files configuration
 STATIC_URL = "/static/"
+
+# Login redirect URL
 LOGIN_REDIRECT_URL = "/register/chooseregistration/"
+
+# Allowed hosts - get from environment variable, default to localhost and 127.0.0.1
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
