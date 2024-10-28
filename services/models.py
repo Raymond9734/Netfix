@@ -1,9 +1,6 @@
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth import get_user_model
-
-# Create your models here.
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from users.models import Company, Customer
 
@@ -11,16 +8,24 @@ User = get_user_model()
 
 
 class Service(models.Model):
+    """
+    Model representing a service offered by a company.
+    Each service has details like name, description, price, and rating.
+    """
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     name = models.CharField(max_length=40)
     description = models.TextField()
     price_hour = models.DecimalField(decimal_places=2, max_digits=100)
     rating = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], default=0
+        validators=[MinValueValidator(0), MaxValueValidator(5)],
+        default=0,
+        help_text="Service rating from 0-5"
     )
+
+    # Predefined service categories
     choices = (
         ("Air Conditioner", "Air Conditioner"),
-        ("Carpentry", "Carpentry"),
+        ("Carpentry", "Carpentry"), 
         ("Electricity", "Electricity"),
         ("Gardening", "Gardening"),
         ("Home Machines", "Home Machines"),
@@ -31,27 +36,40 @@ class Service(models.Model):
         ("Plumbing", "Plumbing"),
         ("Water Heaters", "Water Heaters"),
     )
-    field = models.CharField(max_length=30, blank=False, null=False, choices=choices)
+    field = models.CharField(
+        max_length=30,
+        choices=choices,
+        blank=False,
+        null=False,
+        help_text="Category of service"
+    )
     date = models.DateTimeField(auto_now=True, null=False)
 
     class Meta:
-        unique_together = (
-            "name",
-            "company",
-        )  # Ensure name and company together are unique
+        unique_together = ("name", "company")  # Prevent duplicate service names per company
+        indexes = [
+            models.Index(fields=['name', 'company']),  # Optimize lookups
+            models.Index(fields=['field']),  # Optimize category filtering
+        ]
 
     def __str__(self):
         return self.name
 
 
 class RequestedService(models.Model):
+    """
+    Model representing a service request from a customer.
+    Tracks request details, status, and customer feedback.
+    """
     SERVICE_STATUS_CHOICES = [
         ("in_progress", "In Progress"),
         ("completed", "Completed"),
     ]
 
     company = models.ForeignKey(
-        Company, on_delete=models.CASCADE, related_name="requested_services"
+        Company,
+        on_delete=models.CASCADE,
+        related_name="requested_services"
     )
     service_name = models.CharField(max_length=100)
     service_field = models.CharField(max_length=100)
@@ -59,45 +77,61 @@ class RequestedService(models.Model):
     service_time_hours = models.DecimalField(max_digits=5, decimal_places=2)
     requested_at = models.DateTimeField(default=timezone.now)
     status = models.CharField(
-        max_length=20, choices=SERVICE_STATUS_CHOICES, default="in_progress"
+        max_length=20,
+        choices=SERVICE_STATUS_CHOICES,
+        default="in_progress"
     )
     requested_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="requested_services"
+        User,
+        on_delete=models.CASCADE,
+        related_name="requested_services"
     )
 
-    # New fields for review and rating
+    # Customer feedback fields
     customer_review = models.TextField(
-        blank=True, null=True
-    )  # Optional customer feedback
+        blank=True,
+        null=True,
+        help_text="Optional customer feedback"
+    )
     rating = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], default=0
-    )  # Rating given by the customer
+        validators=[MinValueValidator(0), MaxValueValidator(5)],
+        default=0,
+        help_text="Rating given by customer (0-5)"
+    )
 
-    # Override save method to update service rating
+    class Meta:
+        indexes = [
+            models.Index(fields=['company', 'service_name']),  # Optimize rating calculations
+            models.Index(fields=['status']),  # Optimize status filtering
+        ]
+
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # Save the requested service first
+        """
+        Override save method to update the associated service's average rating
+        whenever a new rating is added or updated.
+        """
+        super().save(*args, **kwargs)
 
-        # Find the corresponding service
+        # Find and update corresponding service rating
         service = Service.objects.filter(
-            name=self.service_name, company=self.company
+            name=self.service_name,
+            company=self.company
         ).first()
 
-        if service is None:
-            return  # Or handle the case where the service does not exist
+        if not service:
+            return
 
-        # Recalculate the average rating for the service
-        requested_services = RequestedService.objects.filter(
-            company=self.company, service_name=self.service_name
+        # Calculate new average rating
+        related_requests = RequestedService.objects.filter(
+            company=self.company,
+            service_name=self.service_name
         )
-        if requested_services.count() == 0:
-            return  # Avoid division by zero
+        request_count = related_requests.count()
 
-        total_rating = sum([req_service.rating for req_service in requested_services])
-        new_average_rating = total_rating / requested_services.count()
-
-        # Update the service's rating
-        service.rating = round(new_average_rating)  # Optional: Round to nearest integer
-        service.save()
+        if request_count > 0:
+            total_rating = sum(req.rating for req in related_requests)
+            service.rating = round(total_rating / request_count)
+            service.save(update_fields=['rating'])  # Optimize by only updating rating field
 
     def __str__(self):
         return f"{self.service_field} - {self.company.username} - {self.status}"
