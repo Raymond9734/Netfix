@@ -14,33 +14,46 @@ from django.contrib import messages
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def index(request, id):
-    service = Service.objects.get(id=id)
+    """Display details for a single service"""
+    service = get_object_or_404(Service, id=id)
     return render(request, "services/single_service.html", {"service": service})
 
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def create(request):
-    # Get the current company
-    company = request.user.company
+    """
+    Create a new service for a company.
+    Handles both GET and POST requests.
+    """
+    # Check if user is logged in, is a company and matches username
+    if not request.user.is_authenticated or not request.user.is_company or request.user.username != request.user.username:
+        return render(request, '403.html', status=403)
+
+    try:
+        company = Company.objects.get(user=request.user)
+    except Company.DoesNotExist:
+        messages.error(request, "Company profile not found.")
+        return redirect('main:home')
+
+    # Determine service field choices based on company's field of work
+    choices = (
+        Service._meta.get_field("field").choices
+        if company.field_of_work == "All in One"
+        else [(company.field_of_work, company.field_of_work)]
+    )
 
     if request.method == "POST":
-        # Get choices based on the company's field_of_work
-        if company.field_of_work == "All in One":
-            choices = Service._meta.get_field("field").choices
-        else:
-            choices = [(company.field_of_work, company.field_of_work)]
-
         form = CreateNewService(request.POST, choices=choices)
         if form.is_valid():
             name = form.cleaned_data["name"]
-            # Check if a Service with the same name already exists for the company
+            
+            # Prevent duplicate service names for same company
             if Service.objects.filter(company=company, name=name).exists():
                 form.add_error(
                     "name",
                     "The service name you entered already exists for your company.",
                 )
             else:
-                # Save the new service
                 Service.objects.create(
                     company=company,
                     name=name,
@@ -52,11 +65,6 @@ def create(request):
                     reverse("company_profile", kwargs={"name": company.username})
                 )
     else:
-        if company.field_of_work == "All in One":
-            choices = Service._meta.get_field("field").choices
-        else:
-            choices = [(company.field_of_work, company.field_of_work)]
-
         form = CreateNewService(choices=choices)
 
     return render(request, "services/create_service.html", {"form": form})
@@ -64,15 +72,24 @@ def create(request):
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def request_service(request, company_name, service_id):
+    """Handle service request creation for a specific service"""
+    # Check if user is logged in and is a customer
+    if not request.user.is_authenticated or not request.user.is_customer:
+        return render(request, '403.html', status=403)
+
     company = get_object_or_404(Company, username=company_name)
     service = get_object_or_404(Service, id=service_id)
 
     if request.method == "POST":
         form = RequestServiceForm(request.POST)
         if form.is_valid():
+            # Verify username matches logged in user
+            if request.user.username != request.user.username:
+                return render(request, '403.html', status=403)
+                
             requested_service = form.save(commit=False)
             requested_service.company = company
-            requested_service.service_name = service
+            requested_service.service_name = service 
             requested_service.service_field = service.field
             requested_service.requested_by = request.user
             requested_service.save()
@@ -82,47 +99,43 @@ def request_service(request, company_name, service_id):
     else:
         form = RequestServiceForm()
 
-    return render(
-        request,
-        "services/request_service.html",
-        {"form": form, "company": company, "service": service},
-    )
+    context = {"form": form, "company": company, "service": service}
+    return render(request, "services/request_service.html", context)
 
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def services_list(request):
-    # Fetch all services from the database
-    services = Service.objects.all().order_by("-date")  # Newest first by default
+    """Display all services ordered by date"""
+    services = Service.objects.all().order_by("-date")
     return render(request, "service_main.html", {"services": services})
 
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def service_by_category(request):
+    """
+    Display services grouped by category with company information.
+    Optimized to use select_related for company data.
+    """
     services = Service.objects.all().select_related("company")
     services_json = json.loads(serialize("json", services))
 
-    # Extract the fields we need for services, including company data
+    # Transform services data for template
     services_data = [
         {
             "id": service["pk"],
             "name": service["fields"]["name"],
             "description": service["fields"]["description"],
-            "price_hour": str(
-                service["fields"]["price_hour"]
-            ),  # Convert Decimal to string
+            "price_hour": str(service["fields"]["price_hour"]),
             "rating": service["fields"]["rating"],
             "field": service["fields"]["field"],
             "company": {
                 "id": service["fields"]["company"],
-                "username": services[
-                    i
-                ].company.username,  # Assuming `name` is a field in the `Company` model
+                "username": services[i].company.username,
             },
         }
         for i, service in enumerate(services_json)
     ]
 
-    # Prepare categories data
     categories_data = [
         {"id": choice[0], "name": choice[1]} for choice in Service.choices
     ]
@@ -136,66 +149,67 @@ def service_by_category(request):
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def most_requested_services(request):
-    # Group by service_name only and count how many times each service_name was requested
+    """Get top 5 most requested services with request counts"""
     services = (
         RequestedService.objects.values("service_name")
-        .annotate(request_count=Count("id"))  # Count occurrences of each service_name
-        .order_by("-request_count")[:5]  # Get top 5 most requested services
+        .annotate(request_count=Count("id"))
+        .order_by("-request_count")[:5]
     )
-
-    # Convert QuerySet to a list of dictionaries
-    services_list = list(services)
-
-    # Render the template with the services data
     return render(
         request,
         "services/most_requested_services.html",
-        {
-            "services": services_list,  # Pass the list to the template
-        },
+        {"services": list(services)},
     )
 
 
 @require_POST
 @login_required(login_url=reverse_lazy("users:choose_registration"))
+@require_POST
+@login_required(login_url=reverse_lazy("users:choose_registration"))
 def submit_review(request, service_id):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            review = data.get("review", "")
-            rating = int(data.get("rating", 0))
-            status = data.get("status", "in_progress")
+    """
+    Handle submission of service reviews.
+    Validates rating and updates service status.
+    Only allows logged in customers who requested the service.
+    """
+    if not request.user.is_customer:
+        return HttpResponseForbidden("Only customers can submit reviews")
 
-            # Ensure that the rating is between 0 and 5
-            if rating < 0 or rating > 5:
-                return JsonResponse({"success": False, "message": "Invalid rating."})
+    try:
+        data = json.loads(request.body)
+        review = data.get("review", "")
+        rating = int(data.get("rating", 0))
+        status = data.get("status", "in_progress")
 
-            # Find the requested service
-            requested_service = RequestedService.objects.get(id=service_id)
+        if not 0 <= rating <= 5:
+            return JsonResponse({"success": False, "message": "Invalid rating."})
 
-            # Update the requested service with the review and rating
-            requested_service.customer_review = review
-            requested_service.rating = rating
-            requested_service.status = status
-            requested_service.save()
+        requested_service = get_object_or_404(
+            RequestedService, 
+            id=service_id,
+            requested_by=request.user
+        )
+        requested_service.customer_review = review
+        requested_service.rating = rating
+        requested_service.status = status
+        requested_service.save()
 
-            return JsonResponse({"success": True})
-        except RequestedService.DoesNotExist:
-            return JsonResponse({"success": False, "message": "Service not found."})
-        except Exception as e:
-            return JsonResponse({"success": False, "message": str(e)})
-    else:
-        return JsonResponse({"success": False, "message": "Invalid request method."})
+        return JsonResponse({"success": True})
+    except Exception as e:
+        return JsonResponse({"success": False, "message": str(e)})
 
 
 @require_POST
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def mark_service_complete(request, service_id):
-    """
-    Marks a requested service as completed.
-    """
+    """Mark a requested service as completed if not already done"""
+    if not request.user.is_customer:
+        return HttpResponseForbidden("Only customers can mark services as complete")
+
     service = get_object_or_404(
-        RequestedService, id=service_id, requested_by=request.user
+        RequestedService, 
+        id=service_id, 
+        requested_by=request.user
     )
 
     if service.status == "completed":
@@ -205,14 +219,11 @@ def mark_service_complete(request, service_id):
 
     service.status = "completed"
     service.save()
-
     return JsonResponse({"success": True})
 
 
 @login_required(login_url=reverse_lazy("users:choose_registration"))
 def service_detail(request, service_id):
-    # Retrieve the specific service by its ID
+    """Display detailed view of a specific service"""
     service = get_object_or_404(Service, id=service_id)
-
-    # Pass the service details to the template
     return render(request, "services/single_service.html", {"service": service})
